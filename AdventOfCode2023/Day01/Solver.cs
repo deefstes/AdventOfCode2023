@@ -32,7 +32,7 @@ namespace AdventOfCode2023.Day01
 
         static List<int> ExtractDigits(string input, bool includeWords)
         {
-            List<int> digits = new List<int>();
+            List<int> digits = [];
 
             while (input.Length > 0)
             {
@@ -51,7 +51,7 @@ namespace AdventOfCode2023.Day01
             if (char.IsDigit(input[0]))
             {
                 int d = input[0] - '0';
-                input = input.Substring(1);
+                input = input[1..];
                 return d;
             }
 
@@ -61,17 +61,17 @@ namespace AdventOfCode2023.Day01
                 {
                     if (input.StartsWith(digit.Key))
                     {
-                        input = input.Substring(1);
+                        input = input[1..];
                         return digit.Value;
                     }
                 }
             }
 
-            input = input.Substring(1);
+            input = input[1..];
             return -1;
         }
 
-        static Dictionary<string, int> DigitNames = new Dictionary<string, int>()
+        static readonly Dictionary<string, int> DigitNames = new()
         {
             {"one", 1},
             {"two", 2},

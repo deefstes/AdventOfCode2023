@@ -6,7 +6,7 @@ namespace AdventOfCode2023.Day02
     {
         public string Part1(string input)
         {
-            List<int> validGames = new List<int>();
+            List<int> validGames = [];
 
             foreach(var line in input.AsList())
             {
@@ -63,7 +63,7 @@ namespace AdventOfCode2023.Day02
         public string Part2(string input)
         {
             var lines = input.Split("\r\n");
-            List<int> gamePowers = new List<int>();
+            List<int> gamePowers = [];
 
             foreach (var line in lines)
             {
