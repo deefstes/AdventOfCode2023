@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "Any day": {
+      "commandName": "Project"
+    },
+    "Today": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "SOLVE_CURRENT_DAY": "TRUE"
+      }
+    }
+  }
+}

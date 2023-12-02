@@ -1,8 +1,12 @@
 ﻿using AdventOfCode2023;
 using System.Reflection;
 
-Console.WriteLine("Which day do you want to solve? (1-25):");
-string? userInput = Console.ReadLine();
+string? userInput = null;
+if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SOLVE_CURRENT_DAY")))
+{
+    Console.WriteLine("Which day do you want to solve? (1-25):");
+    userInput = Console.ReadLine();
+}
 
 if (String.IsNullOrEmpty(userInput))
     userInput = DateTime.Now.Day.ToString();
