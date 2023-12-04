@@ -23,5 +23,24 @@ namespace AdventOfCode2023.Utils
                 .Select(s => s.Trim())
                 .ToList();
         }
+
+        public static char[,] AsGrid(this string input)
+        {
+            var lines = input.AsList();
+            var height = lines.Count;
+            var width = lines.Max(s => s.Length);
+
+            var grid = new char[width, height];
+
+            for (int y=0; y<height; y++)
+            {
+                for (int x=0; x<width; x++)
+                {
+                    grid[x, y] = lines[y][x];
+                }
+            }
+            
+            return grid;
+        }
     }
 }
