@@ -12,7 +12,7 @@ namespace AdventOfCode2023.Tests.Day03
             Solver solver = new();
             var rsp = solver.Part1(File.ReadAllText($"Day03\\sample.txt"));
 
-            Assert.That(rsp, Is.EqualTo("Not yet implemented"));
+            Assert.That(rsp, Is.EqualTo("4361"));
         }
 
         [Test()]
@@ -21,7 +21,7 @@ namespace AdventOfCode2023.Tests.Day03
             Solver solver = new();
             var rsp = solver.Part2(File.ReadAllText($"Day03\\sample.txt"));
 
-            Assert.That(rsp, Is.EqualTo("Not yet implemented"));
+            Assert.That(rsp, Is.EqualTo("467835"));
         }
     }
 }
