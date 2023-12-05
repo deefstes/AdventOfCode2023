@@ -1,13 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace AdventOfCode2023.Utils
 {
     public static class Utils
     {
+        public static (T, long) MeasureExecutionTime<T>(Func<T> function)
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            T result = function();
+            stopwatch.Stop();
+
+            return (result, stopwatch.ElapsedMilliseconds);
+        }
+
         /// <summary>
         /// Convert a string containing newlines to IList<string>, dropping all leading and trailing whitespace in the list and also in each individual string in the list
         /// </summary>
