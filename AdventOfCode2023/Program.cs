@@ -51,5 +51,5 @@ var p2 = Utils.MeasureExecutionTime(() => solver.Part2(fileInput));
 
 Console.WriteLine();
 Console.WriteLine($"Solution for day {day}");
-Console.WriteLine($"Part 1 ({p1.Item2} ms): {p1.Item1}");
-Console.WriteLine($"Part 2 ({p2.Item2} ms): {p2.Item1}");
+Console.WriteLine($"Part 1 ({p1.Item2.Format()}): {p1.Item1}");
+Console.WriteLine($"Part 2 ({p2.Item2.Format()}): {p2.Item1}");

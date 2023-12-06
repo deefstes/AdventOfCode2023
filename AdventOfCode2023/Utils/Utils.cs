@@ -1,16 +1,38 @@
 ﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace AdventOfCode2023.Utils
 {
     public static class Utils
     {
-        public static (T, long) MeasureExecutionTime<T>(Func<T> function)
+        public static (T, TimeSpan) MeasureExecutionTime<T>(Func<T> function)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
             T result = function();
             stopwatch.Stop();
 
-            return (result, stopwatch.ElapsedMilliseconds);
+            return (result, stopwatch.Elapsed);
+        }
+
+        public static string Format(this TimeSpan timeSpan)
+        {
+            if ((int)timeSpan.TotalHours > 0)
+                return $"{(int)timeSpan.TotalHours}h " +
+                       $"{timeSpan.Minutes}m " +
+                       $"{timeSpan.Seconds}.{timeSpan.Milliseconds:D3}s";
+
+            if ((int)timeSpan.TotalMinutes > 0)
+                return $"{timeSpan.Minutes}m " +
+                       $"{timeSpan.Seconds}.{timeSpan.Milliseconds:D3}s";
+
+            if ((int)timeSpan.TotalSeconds > 0)
+                return $"{timeSpan.Seconds}.{timeSpan.Milliseconds:D3}s";
+
+            if ((int)timeSpan.TotalMilliseconds > 0)
+                return $"{timeSpan.Milliseconds}.{timeSpan.Microseconds:D3}ms";
+
+            return $"{timeSpan.Microseconds}μs";
         }
 
         /// <summary>
