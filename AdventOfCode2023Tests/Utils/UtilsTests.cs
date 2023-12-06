@@ -18,5 +18,23 @@ namespace AdventOfCode2023.Utils.Tests
         {
             Assert.That(string.Join(",", input.AsList().ToArray()), Is.EqualTo(output));
         }
+
+        [Test()]
+        [TestCase(0, 0, 12, 345, 123, "12.345s")]
+        [TestCase(0, 0, 0, 0, 123, "123μs")]
+        [TestCase(0, 0, 0, 1, 123, "1.123ms")]
+        [TestCase(1, 23, 45, 67, 89, "1h 23m 45.067s")]
+        public void FormatTimeSpanTest(double hours, double minutes, double seconds, double milliseconds, double microseconds, string expected)
+        {
+            TimeSpan h = TimeSpan.FromHours(hours);
+            TimeSpan m = TimeSpan.FromMinutes(minutes);
+            TimeSpan s = TimeSpan.FromSeconds(seconds);
+            TimeSpan ms = TimeSpan.FromMilliseconds(milliseconds);
+            TimeSpan us = TimeSpan.FromMicroseconds(microseconds);
+
+            var ts = h + m + s + ms + us;
+
+            Assert.That(ts.FormatTimeSpan(), Is.EqualTo(expected));
+        }
     }
 }
