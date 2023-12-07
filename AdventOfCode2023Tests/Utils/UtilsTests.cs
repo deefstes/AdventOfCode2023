@@ -34,7 +34,7 @@ namespace AdventOfCode2023.Utils.Tests
 
             var ts = h + m + s + ms + us;
 
-            Assert.That(ts.FormatTimeSpan(), Is.EqualTo(expected));
+            Assert.That(ts.Format(), Is.EqualTo(expected));
         }
     }
 }

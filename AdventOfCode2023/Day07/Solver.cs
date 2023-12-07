@@ -27,7 +27,6 @@ namespace AdventOfCode2023.Day07
         public string Part2(string input)
         {
             List<Hand> hands = [];
-            List<Hand> orderedHands = [];
 
             foreach (var line in input.AsList())
                 hands.Add(new Hand(line, true));
