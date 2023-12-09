@@ -1,13 +1,7 @@
-﻿using AdventOfCode2023.Utils;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdventOfCode2023.Day08
+﻿namespace AdventOfCode2023.Day08
 {
+    using AdventOfCode2023.Utils;
+
     public class Solver : ISolver
     {
         public string Part1(string input)
@@ -52,25 +46,25 @@ namespace AdventOfCode2023.Day08
                 nodes[lineParts[0]] = new NetworkNode(lineParts[0], neighbours[0], neighbours[1]);
             }
 
-            List<NetworkNode> nextNodes = nodes.Where(n => n.Key.EndsWith("A")).Select(n=>n.Value).ToList();
-            char nextStep = steps[0];
-            var length = 0;
+            List<NetworkNode> nextNodes = nodes.Where(n => n.Key.EndsWith('A')).Select(n=>n.Value).ToList();
+            long[] values = new long[nextNodes.Count];
 
-            while (nextNodes.Count(n=>!n.name.EndsWith("Z")) > 0)
+            for (int nodeInd = 0; nodeInd < nextNodes.Count; nodeInd++)
             {
-                length++;
-                List<NetworkNode> newNodes = [];
+                char nextStep = steps[0];
+                var length = 0;
 
-                foreach (NetworkNode nextNode in nextNodes)
+                while (!nextNodes[nodeInd].name.EndsWith('Z'))
                 {
-                    var nn = nodes[nextNode.neighbours[nextStep]];
-                    newNodes.Add(nn);
+                    length++;
+                    nextNodes[nodeInd] = nodes[nextNodes[nodeInd].neighbours[nextStep]];
+                    nextStep = steps[length % steps.Count];
                 }
-                nextStep = steps[length % steps.Count];
-                nextNodes = newNodes;
+
+                values[nodeInd] = length;
             }
 
-            return length.ToString();
+            return Utils.Lcm(values).ToString();
         }
 
         private class NetworkNode

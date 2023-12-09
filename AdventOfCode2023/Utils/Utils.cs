@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace AdventOfCode2023.Utils
 {
@@ -68,6 +66,36 @@ namespace AdventOfCode2023.Utils
             }
             
             return grid;
+        }
+
+        public static T Gcd<T>(T a, T b)
+        {
+            if (a == null)
+                throw new ArgumentNullException(nameof(a));
+            if (b == null)
+                throw new ArgumentNullException(nameof(b));
+
+            dynamic x = a;
+            dynamic y = b;
+
+            if (y == 0)
+                return Math.Abs(x);
+            else
+                return Gcd(y, x % y);
+        }
+
+        public static T Lcm<T>(T[] values)
+        {
+            return values.Aggregate((a, b) => {
+                if (a == null)
+                    throw new ArgumentNullException(nameof(a));
+                if (b == null)
+                    throw new ArgumentNullException(nameof(b));
+
+                dynamic x = a;
+                dynamic y = b;
+                return Math.Abs(x * y / Gcd(x, y));
+            });
         }
     }
 }

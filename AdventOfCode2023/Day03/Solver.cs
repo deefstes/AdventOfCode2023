@@ -178,10 +178,6 @@ namespace AdventOfCode2023.Day03
                     {
                         sum.Add(values.First() * values.Last());
                     }
-                    else
-                    {
-                        Console.WriteLine($"Not adding gear ({symbol.location.x},{symbol.location.y} with {values.Count} neighbouring parts");
-                    }
                 }
 
                 return sum.Sum();
