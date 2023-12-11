@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 
 namespace AdventOfCode2023.Utils
 {
@@ -96,6 +97,34 @@ namespace AdventOfCode2023.Utils
                 dynamic y = b;
                 return Math.Abs(x * y / Gcd(x, y));
             });
+        }
+
+        public static string GridToString(char[,] grid)
+        {
+            StringBuilder sb = new();
+            for (int j = 0; j < grid.GetLength(1); j++)
+            {
+                for (int i = 0; i < grid.GetLength(0); i++)
+                {
+                    sb.Append(grid[i, j]);
+                }
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
+        }
+
+        public static List<(T,T)> Combinations<T>(List<T> input)
+        {
+            List<(T, T)> output = [];
+
+            for (int i = 0; i< input.Count;i++)
+            {
+                for (int j = i+1;j<input.Count;j++)
+                    output.Add((input[j], input[i]));
+            }
+
+            return output;
         }
     }
 }

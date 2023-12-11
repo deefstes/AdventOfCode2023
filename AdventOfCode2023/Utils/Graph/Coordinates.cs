@@ -21,6 +21,53 @@
             };
         }
 
+        public bool InBounds(int width, int height)
+        {
+            if (X < 0)
+                return false;
+            if (Y < 0)
+                return false;
+            if (X >= width)
+                return false;
+            if (Y >= height)
+                return false;
+
+            return true;
+        }
+
+        public bool TouchesBorder(int width, int height)
+        {
+            return !(Move(Direction.North).InBounds(width, height) &&
+                Move(Direction.East).InBounds(width, height) &&
+                Move(Direction.South).InBounds(width, height) &&
+                Move(Direction.West).InBounds(width, height)
+                );
+        }
+
+        public Direction? DirectionTo(Coordinates other)
+        {
+            foreach (Direction dir in new[] {
+                Direction.North,
+                Direction.South,
+                Direction.East,
+                Direction.West,
+                Direction.NorthEast,
+                Direction.NorthWest,
+                Direction.SouthEast,
+                Direction.SouthWest})
+            {
+                if (this.Move(dir).Equals(other))
+                    return dir;
+            }
+
+            return null;
+        }
+
+        public int ManhattanDistanceTo(Coordinates other)
+        {
+            return Math.Abs(other.X - X) + Math.Abs(other.Y - Y);
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj == null)
