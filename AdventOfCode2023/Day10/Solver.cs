@@ -1,14 +1,11 @@
-﻿using AdventOfCode2023.Utils;
-using AdventOfCode2023.Utils.Graph;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdventOfCode2023.Day10
+﻿namespace AdventOfCode2023.Day10
 {
+    using AdventOfCode2023.Utils;
+    using AdventOfCode2023.Utils.Graph;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class Solver : ISolver
     {
         public string Part1(string input)

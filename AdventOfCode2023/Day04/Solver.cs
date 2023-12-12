@@ -1,14 +1,10 @@
-﻿using AdventOfCode2023.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.ExceptionServices;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdventOfCode2023.Day04
+﻿namespace AdventOfCode2023.Day04
 {
+    using AdventOfCode2023.Utils;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class Solver : ISolver
     {
         public string Part1(string input)

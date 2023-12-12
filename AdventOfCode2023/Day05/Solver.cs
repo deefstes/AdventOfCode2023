@@ -1,7 +1,7 @@
-﻿using AdventOfCode2023.Utils;
-
-namespace AdventOfCode2023.Day05
+﻿namespace AdventOfCode2023.Day05
 {
+    using AdventOfCode2023.Utils;
+
     public class Solver : ISolver
     {
         public string Part1(string input)
