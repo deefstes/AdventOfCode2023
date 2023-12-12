@@ -45,6 +45,7 @@ if (solver == null)
 }
 
 var fileInput = File.ReadAllText($"Day{day:D2}\\input.txt");
+//var fileInput = File.ReadAllText($"Day{day:D2}\\sample.txt");
 
 var p1 = Utils.MeasureExecutionTime(() => solver.Part1(fileInput));
 var p2 = Utils.MeasureExecutionTime(() => solver.Part2(fileInput));
