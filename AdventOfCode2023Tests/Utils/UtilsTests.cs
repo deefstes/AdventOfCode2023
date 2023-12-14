@@ -87,5 +87,39 @@
             long[] quad = [a, b, c, d];
             Assert.That(Utils.Lcm(quad), Is.EqualTo(expected));
         }
+
+        [Test()]
+        [TestCase("Kitten", "Sitten", 1)]
+        [TestCase("Sittin", "Sitting", 1)]
+        [TestCase("Uninformed", "Uniformed", 1)]
+        [TestCase("String One", "String Uno", 2)]
+        [TestCase("flaw", "lawn", 2)]
+        [TestCase("saturday", "sunday", 3)]
+        [TestCase("abc", "xyz", 3)]
+        [TestCase("dog", "dogs", 1)]
+        [TestCase("abcdef", "aecdbf", 2)]
+        [TestCase("abcdef", "azcedb", 4)]
+        public void LevenshteinTest(string s1, string s2, int expected)
+        {
+            Assert.That(Utils.Levenshtein(s1, s2), Is.EqualTo(expected));
+        }
+
+        [Test()]
+        [TestCase("123\r\n456\r\n789", 0, "147")]
+        [TestCase("00000\r\n11111\r\n22222\r\n12345", 2, "0123")]
+        public void ColToStringTest(string input, int col, string expected)
+        {
+            var grid = input.AsGrid();
+            Assert.That(Utils.ColToString(grid, col), Is.EqualTo(expected));
+        }
+
+        [Test()]
+        [TestCase("123\r\n456\r\n789", 0, "123")]
+        [TestCase("00000\r\n11111\r\n22222\r\n12345", 2, "22222")]
+        public void RowToStringTest(string input, int col, string expected)
+        {
+            var grid = input.AsGrid();
+            Assert.That(Utils.RowToString(grid, col), Is.EqualTo(expected));
+        }
     }
 }
