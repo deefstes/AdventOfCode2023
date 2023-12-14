@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdventOfCode2023.Day25
+﻿namespace AdventOfCode2023.Day25
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
     public class Solver : ISolver
     {
         public string Part1(string input)
