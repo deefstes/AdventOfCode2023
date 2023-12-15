@@ -6,6 +6,6 @@ namespace AdventOfCode2023.Utils.Pathfinding
     {
         public bool HasSolution { get; }
         public int TotalCost { get; }
-        public List<Coordinates> Path { get; }
+        public List<string> Path { get; }
     }
 }

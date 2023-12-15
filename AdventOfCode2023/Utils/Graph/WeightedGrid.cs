@@ -18,7 +18,7 @@ namespace AdventOfCode2023.Utils.Graph
 
             for (int y = 0; y < this.Height; y++)
                 for (int x = 0; x < this.Width; x++)
-                    _nodes[new(x, y)] = new(new(x, y), 1, $"{x},{y}");
+                    _nodes[new(x, y)] = new($"{x},{y}", 1, new(x, y));
         }
 
         public WeightedGrid(int[,] arr, Func<GraphNode, GraphNode, int>? costFunction = null)
@@ -29,7 +29,7 @@ namespace AdventOfCode2023.Utils.Graph
 
             for (int y = 0; y < Height; y++)
                 for (int x = 0; x < Width; x++)
-                    _nodes[new(x, y)] = new(new(x, y), arr[x,y], $"{x},{y}");
+                    _nodes[new(x, y)] = new($"{x},{y}", arr[x, y], new(x, y));
         }
 
         public WeightedGrid(string[,] arr, Func<GraphNode, GraphNode, int>? costFunction = null)
@@ -40,7 +40,7 @@ namespace AdventOfCode2023.Utils.Graph
 
             for (int y = 0; y < Height; y++)
                 for (int x = 0; x < Width; x++)
-                    _nodes[new(x, y)] = new(new(x, y), 1, arr[x,y]);
+                    _nodes[new(x, y)] = new(arr[x, y], 1, new(x, y));
         }
 
         public int Cost(GraphNode from, GraphNode to)
@@ -48,28 +48,28 @@ namespace AdventOfCode2023.Utils.Graph
             return _costFunction(from, to);
         }
 
-        public IEnumerable<GraphNode> Neighbors(GraphNode node)
+        public IEnumerable<GraphNode> Neighbours(GraphNode node)
         {
             List<GraphNode> neighbours = [];
 
-            if (_nodes.TryGetValue(node.Coords.Move(Direction.North), out GraphNode? neighbourNorth))
+            if (_nodes.TryGetValue(node.Coords!.Move(Direction.North), out GraphNode? neighbourNorth))
                 neighbours.Add(neighbourNorth);
 
-            if (_nodes.TryGetValue(node.Coords.Move(Direction.East), out GraphNode? neighbourEast))
+            if (_nodes.TryGetValue(node.Coords!.Move(Direction.East), out GraphNode? neighbourEast))
                 neighbours.Add(neighbourEast);
 
-            if (_nodes.TryGetValue(node.Coords.Move(Direction.South), out GraphNode? neighbourSouth))
+            if (_nodes.TryGetValue(node.Coords!.Move(Direction.South), out GraphNode? neighbourSouth))
                 neighbours.Add(neighbourSouth);
 
-            if (_nodes.TryGetValue(node.Coords.Move(Direction.West), out GraphNode? neighbourWest))
+            if (_nodes.TryGetValue(node.Coords!.Move(Direction.West), out GraphNode? neighbourWest))
                 neighbours.Add(neighbourWest);
 
             return neighbours;
         }
 
-        public GraphNode? Node(Coordinates coordinates)
+        public GraphNode? Node(string name)
         {
-            if (_nodes.TryGetValue(coordinates, out GraphNode? node))
+            if (_nodes.TryGetValue(new(int.Parse(name.Split(',')[0]), int.Parse(name.Split(',')[1])), out GraphNode? node))
                 return node;
 
             return null;
@@ -87,7 +87,7 @@ namespace AdventOfCode2023.Utils.Graph
 
         public bool SetNode(GraphNode node)
         {
-            _nodes[node.Coords] = node;
+            _nodes[node.Coords!] = node;
 
             return true;
         }
@@ -96,16 +96,6 @@ namespace AdventOfCode2023.Utils.Graph
         {
             if (_nodes.ContainsKey(coords))
                 _nodes[coords].Value = value;
-            else
-                return false;
-
-            return true;
-        }
-
-        public bool SetNodeName(Coordinates coords, string name)
-        {
-            if (_nodes.ContainsKey(coords))
-                _nodes[coords].Name = name;
             else
                 return false;
 
@@ -122,9 +112,9 @@ namespace AdventOfCode2023.Utils.Graph
                 {
                     Coordinates coords = new(x, y);
                     if (!_nodes.ContainsKey(coords)) { sb.Append('#'); }
-                    else if (pathFinder.Path.Count != 0 && pathFinder.Path.First().Equals(coords)) { sb.Append('S'); }
-                    else if (pathFinder.Path.Count != 0 && pathFinder.Path.Last().Equals(coords)) { sb.Append('F'); }
-                    else if (pathFinder.Path.Count != 0 && pathFinder.Path.Contains(coords)) { sb.Append('*'); }
+                    else if (pathFinder.Path.Count != 0 && pathFinder.Path.First().Equals(coords.ToString())) { sb.Append('S'); }
+                    else if (pathFinder.Path.Count != 0 && pathFinder.Path.Last().Equals(coords.ToString())) { sb.Append('F'); }
+                    else if (pathFinder.Path.Count != 0 && pathFinder.Path.Contains(coords.ToString())) { sb.Append('*'); }
                     else if (_nodes[coords].Value > 1) { sb.Append('+'); }
                     else { sb.Append('.'); }
                 }
@@ -182,7 +172,7 @@ namespace AdventOfCode2023.Utils.Graph
 
         private int DefaultCostFunction(GraphNode from, GraphNode to)
         {
-            if (_nodes.TryGetValue(to.Coords, out GraphNode? node))
+            if (_nodes.TryGetValue(to.Coords!, out GraphNode? node))
                 return node?.Value ?? int.MaxValue;
 
             return int.MaxValue;

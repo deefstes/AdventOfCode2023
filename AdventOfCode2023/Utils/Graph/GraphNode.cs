@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode2023.Utils.Graph
 {
-    public class GraphNode(Coordinates coords, int value, string name)
+    public class GraphNode(string name, int value, Coordinates? coords = null)
     {
-        public readonly Coordinates Coords = coords;
+        public readonly Coordinates? Coords = coords;
         public int Value = value;
         public string Name = name;
 
@@ -19,7 +19,7 @@ namespace AdventOfCode2023.Utils.Graph
 
             if (obj is GraphNode other)
             {
-                return Coords.Equals(other.Coords)
+                return Equals(Coords, other.Coords)
                     && Value == other.Value
                     && Name == other.Name;
             }

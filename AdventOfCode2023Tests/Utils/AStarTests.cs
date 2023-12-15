@@ -51,8 +51,8 @@ namespace AdventOfCode2023.Utils.Tests
             // Act
             var astar = new AStar(
                 graph: grid,
-                start: new(1, 4),
-                finish: new(8, 5));
+                start: "1,4",
+                finish: "8,5");
 
             // Assert
             Assert.That(grid.Draw(astar), Is.EqualTo("...*****..\r\n"
@@ -123,8 +123,8 @@ namespace AdventOfCode2023.Utils.Tests
             // Act
             var astar = new AStar(
                 graph: grid,
-                start: new(1, 4),
-                finish: new(8, 5));
+                start: "1,4",
+                finish: "8,5");
 
             // Assert
             Assert.That(grid.Draw(astar), Is.EqualTo("..........\r\n"

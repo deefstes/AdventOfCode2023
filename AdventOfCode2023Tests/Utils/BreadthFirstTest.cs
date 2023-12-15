@@ -51,8 +51,8 @@ namespace AdventOfCode2023.Utils.Tests
             // Act
             var bfs = new BreadthFirst(
                 graph: grid,
-                start: new(1, 4),
-                finish: new(8, 5));
+                start: "1,4",
+                finish: "8,5");
 
             Console.WriteLine(grid.Draw(bfs));
 
@@ -125,8 +125,8 @@ namespace AdventOfCode2023.Utils.Tests
             // Act
             var bfs = new BreadthFirst(
                 graph: grid,
-                start: new(1, 4),
-                finish: new(8, 5));
+                start: "1,4",
+                finish: "8,5");
 
             Console.WriteLine(grid.Draw(bfs));
 

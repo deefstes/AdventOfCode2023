@@ -6,16 +6,16 @@ namespace AdventOfCode2023.Utils.Pathfinding
     {
         public bool HasSolution { get; }
         public int TotalCost { get; }
-        public List<Coordinates> Path { get; }
-        public Dictionary<Coordinates, int> DistancesMap { get; }
+        public List<string> Path { get; }
+        public Dictionary<string, int> DistancesMap { get; }
 
-        public BreadthFirst(IWeightedGraph graph, Coordinates start, Coordinates finish, bool earlyExit = false)
+        public BreadthFirst(IWeightedGraph graph, string start, string finish, bool earlyExit = false)
         {
             Path = [];
             DistancesMap = [];
 
-            Queue<Coordinates> frontier = [];
-            Dictionary<Coordinates, Coordinates> cameFrom = [];
+            Queue<string> frontier = [];
+            Dictionary<string, string> cameFrom = [];
 
             frontier.Enqueue(start);
 
@@ -28,13 +28,13 @@ namespace AdventOfCode2023.Utils.Pathfinding
 
                 distance++;
 
-                foreach (var neighbour in graph.Neighbors(graph.Node(current)!))
+                foreach (var neighbour in graph.Neighbours(graph.Node(current)!))
                 {
-                    if (!cameFrom.ContainsKey(neighbour.Coords))
+                    if (!cameFrom.ContainsKey(neighbour.Name))
                     {
-                        frontier.Enqueue(neighbour.Coords);
-                        cameFrom[neighbour.Coords] = current;
-                        DistancesMap[neighbour.Coords] = distance;
+                        frontier.Enqueue(neighbour.Name);
+                        cameFrom[neighbour.Name] = current;
+                        DistancesMap[neighbour.Name] = distance;
                     }
                 }
             }

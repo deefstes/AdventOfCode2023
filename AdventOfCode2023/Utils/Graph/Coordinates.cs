@@ -137,6 +137,11 @@
         {
             return HashCode.Combine(X, Y);
         }
+
+        public override string ToString()
+        {
+            return $"{X},{Y}";
+        }
     }
 
     public enum Direction

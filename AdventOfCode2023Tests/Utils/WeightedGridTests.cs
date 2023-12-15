@@ -10,13 +10,13 @@ namespace AdventOfCode2023.Utils.Tests
         public void DefaultCostFunctionTest()
         {
             var grid = new WeightedGrid(10, 10);
-            GraphNode node1 = new(new(0, 1), 2, "node1");
-            GraphNode node2 = new(new(0, 2), 4, "node2");
-            GraphNode node3 = new(new(0, 3), 6, "node3");
+            GraphNode node1 = new("node1", 2, new(0, 1));
+            GraphNode node2 = new("node2", 4, new(0, 2));
+            GraphNode node3 = new("node3", 6, new(0, 3));
 
-            grid.SetNodeValue(node1.Coords, node1.Value);
-            grid.SetNodeValue(node2.Coords, node2.Value);
-            grid.SetNodeValue(node3.Coords, node3.Value);
+            grid.SetNodeValue(node1.Coords!, node1.Value);
+            grid.SetNodeValue(node2.Coords!, node2.Value);
+            grid.SetNodeValue(node3.Coords!, node3.Value);
 
             Assert.That(grid.Cost(node1, node2), Is.EqualTo(4));
             Assert.That(grid.Cost(node2, node3), Is.EqualTo(6));
@@ -26,13 +26,13 @@ namespace AdventOfCode2023.Utils.Tests
         public void CustomCostFunctionTest()
         {
             var grid = new WeightedGrid(10, 10, CustomCostFunction);
-            GraphNode node1 = new(new(0, 1), 2, "node1");
-            GraphNode node2 = new(new(0, 2), 4, "node2");
-            GraphNode node3 = new(new(0, 3), 6, "node3");
+            GraphNode node1 = new("node1", 2, new(0, 1));
+            GraphNode node2 = new("node2", 4, new(0, 2));
+            GraphNode node3 = new("node3", 6, new(0, 3));
 
-            grid.SetNodeValue(node1.Coords, node1.Value);
-            grid.SetNodeValue(node2.Coords, node2.Value);
-            grid.SetNodeValue(node3.Coords, node3.Value);
+            grid.SetNodeValue(node1.Coords!, node1.Value);
+            grid.SetNodeValue(node2.Coords!, node2.Value);
+            grid.SetNodeValue(node3.Coords!, node3.Value);
 
             Assert.That(grid.Cost(node1, node2), Is.EqualTo(2));
             Assert.That(grid.Cost(node2, node3), Is.EqualTo(2));
@@ -109,25 +109,21 @@ namespace AdventOfCode2023.Utils.Tests
         public void DrawByNamesTest()
         {
             var grid = new WeightedGrid(10, 10, CustomCostFunction);
-            int inc = 1;
-            for (int y = 0; y < 10; y++)
-                for (int x = 0; x < 10; x++)
-                    grid.SetNodeName(new(x, y), (inc++).ToString().PadLeft(3, '0'));
 
             for (int i = 0; i < 10; i++)
                 grid.DeleteNode(new(i, 10 - i - 1));
 
             var str = grid.DrawByNames();
-            Assert.That(str, Is.EqualTo("001 002 003 004 005 006 007 008 009 XXX\r\n"
-                                      + "011 012 013 014 015 016 017 018 XXX 020\r\n"
-                                      + "021 022 023 024 025 026 027 XXX 029 030\r\n"
-                                      + "031 032 033 034 035 036 XXX 038 039 040\r\n"
-                                      + "041 042 043 044 045 XXX 047 048 049 050\r\n"
-                                      + "051 052 053 054 XXX 056 057 058 059 060\r\n"
-                                      + "061 062 063 XXX 065 066 067 068 069 070\r\n"
-                                      + "071 072 XXX 074 075 076 077 078 079 080\r\n"
-                                      + "081 XXX 083 084 085 086 087 088 089 090\r\n"
-                                      + "XXX 092 093 094 095 096 097 098 099 100\r\n"));
+            Assert.That(str, Is.EqualTo("0,0 1,0 2,0 3,0 4,0 5,0 6,0 7,0 8,0 XXX\r\n"
+                                      + "0,1 1,1 2,1 3,1 4,1 5,1 6,1 7,1 XXX 9,1\r\n"
+                                      + "0,2 1,2 2,2 3,2 4,2 5,2 6,2 XXX 8,2 9,2\r\n"
+                                      + "0,3 1,3 2,3 3,3 4,3 5,3 XXX 7,3 8,3 9,3\r\n"
+                                      + "0,4 1,4 2,4 3,4 4,4 XXX 6,4 7,4 8,4 9,4\r\n"
+                                      + "0,5 1,5 2,5 3,5 XXX 5,5 6,5 7,5 8,5 9,5\r\n"
+                                      + "0,6 1,6 2,6 XXX 4,6 5,6 6,6 7,6 8,6 9,6\r\n"
+                                      + "0,7 1,7 XXX 3,7 4,7 5,7 6,7 7,7 8,7 9,7\r\n"
+                                      + "0,8 XXX 2,8 3,8 4,8 5,8 6,8 7,8 8,8 9,8\r\n"
+                                      + "XXX 1,9 2,9 3,9 4,9 5,9 6,9 7,9 8,9 9,9\r\n"));
         }
     }
 }

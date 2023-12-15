@@ -6,16 +6,20 @@ namespace AdventOfCode2023.Utils.Pathfinding
     {
         public bool HasSolution { get; }
         public int TotalCost { get; }
-        public List<Coordinates> Path { get; }
+        public List<string> Path { get; }
 
-        private readonly Dictionary<Coordinates, Coordinates> _cameFrom = [];
-        private readonly Dictionary<Coordinates, int> _costSoFar = [];
+        private readonly Dictionary<string, string> _cameFrom = [];
+        private readonly Dictionary<string, int> _costSoFar = [];
+        private readonly Func<string, string, int> _heuristicFunction;
+        private readonly IWeightedGraph _graph;
 
-        public AStar(IWeightedGraph graph, Coordinates start, Coordinates finish)
+        public AStar(IWeightedGraph graph, string start, string finish, Func<string, string, int>? heuristicFunction = null)
         {
+            _graph = graph;
+            _heuristicFunction = heuristicFunction ?? DefaultHeuristicFunction;
             Path = [];
 
-            var frontier = new PriorityQueue<Coordinates, int>();
+            var frontier = new PriorityQueue<string, int>();
             frontier.Enqueue(start, 0);
 
             _cameFrom[start] = start;
@@ -30,15 +34,15 @@ namespace AdventOfCode2023.Utils.Pathfinding
                     break;
                 }
 
-                foreach (var next in graph.Neighbors(graph.Node(current)!))
+                foreach (var next in graph.Neighbours(graph.Node(current)!))
                 {
                     int newCost = _costSoFar[current] + graph.Cost(graph.Node(current)!, next);
-                    if (!_costSoFar.ContainsKey(next.Coords) || newCost < _costSoFar[next.Coords])
+                    if (!_costSoFar.ContainsKey(next.Name) || newCost < _costSoFar[next.Name])
                     {
-                        _costSoFar[next.Coords] = newCost;
-                        int priority = newCost + Heuristic(next.Coords, finish);
-                        frontier.Enqueue(next.Coords, priority);
-                        _cameFrom[next.Coords] = current;
+                        _costSoFar[next.Name] = newCost;
+                        int priority = newCost + Heuristic(next.Name, finish);
+                        frontier.Enqueue(next.Name, priority);
+                        _cameFrom[next.Name] = current;
                     }
                 }
             }
@@ -61,9 +65,20 @@ namespace AdventOfCode2023.Utils.Pathfinding
             }
         }
 
-        static private int Heuristic(Coordinates a, Coordinates b)
+        private int Heuristic(string a, string b)
         {
-            return Math.Abs(a.X - b.X) + Math.Abs(a.Y - b.Y);
+            return _heuristicFunction(a, b);
+        }
+
+        private int DefaultHeuristicFunction(string a, string b)
+        {
+            var node1 = _graph.Node(a);
+            var node2 = _graph.Node(b);
+
+            if (node1 == null || node2 == null)
+                throw new ArgumentException("Null node");
+
+            return Math.Abs(node1!.Coords!.X - node2!.Coords!.X) + Math.Abs(node1!.Coords!.Y - node2!.Coords!.Y);
         }
     }
 }
