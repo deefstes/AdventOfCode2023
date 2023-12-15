@@ -68,6 +68,58 @@
             return Math.Abs(other.X - X) + Math.Abs(other.Y - Y);
         }
 
+        public int EuclidianDistanceTo(Coordinates other)
+        {
+            var dx = Math.Abs(other.X - X);
+            var dy = Math.Abs(other.Y - Y);
+
+            return (int)Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        public List<Coordinates> Neighbours()
+        {
+            List<Coordinates> neighbours = [];
+
+            neighbours.AddRange(NeighboursCardinal());
+            neighbours.AddRange(NeighboursOrdinal());
+
+            return neighbours;
+        }
+
+        public List<Coordinates> Neighbours(List<Direction> directions)
+        {
+            List<Coordinates> neighbours = [];
+
+            foreach (Direction dir in directions)
+                neighbours.Add(Move(dir));
+
+            return neighbours;
+        }
+
+        public List<Coordinates> NeighboursCardinal()
+        {
+            List<Coordinates> neighbours = [];
+
+            neighbours.Add(Move(Direction.North));
+            neighbours.Add(Move(Direction.East));
+            neighbours.Add(Move(Direction.South));
+            neighbours.Add(Move(Direction.West));
+
+            return neighbours;
+        }
+
+        public List<Coordinates> NeighboursOrdinal()
+        {
+            List<Coordinates> neighbours = [];
+
+            neighbours.Add(Move(Direction.NorthEast));
+            neighbours.Add(Move(Direction.NorthWest));
+            neighbours.Add(Move(Direction.SouthEast));
+            neighbours.Add(Move(Direction.SouthWest));
+
+            return neighbours;
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj == null)
