@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode2023.Utils.Graph
 {
-    public class GraphNode(string name, int value, Coordinates? coords = null)
+    public class GraphNode(string name, int value = 1, Coordinates? coords = null)
     {
         public readonly Coordinates? Coords = coords;
         public int Value = value;
