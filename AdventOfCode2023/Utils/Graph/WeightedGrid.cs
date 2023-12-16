@@ -177,5 +177,18 @@ namespace AdventOfCode2023.Utils.Graph
 
             return int.MaxValue;
         }
+
+        public IEnumerable<GraphNode> Nodes()
+        {
+            foreach (var node in _nodes.Values)
+                yield return node;
+        }
+
+        public IEnumerable<(GraphNode, GraphNode, int)> Connections()
+        {
+            foreach (var node in _nodes.Values)
+                foreach (var neighbour in Neighbours(node))
+                    yield return (node, neighbour, Cost(node, neighbour));
+        }
     }
 }

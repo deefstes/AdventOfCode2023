@@ -23,7 +23,7 @@ namespace AdventOfCode2023.Utils.Pathfinding
             while (frontier.Count != 0)
             {
                 var current = frontier.Dequeue();
-                if (current.Equals(finish))
+                if (earlyExit && current.Equals(finish))
                     break;
 
                 distance++;

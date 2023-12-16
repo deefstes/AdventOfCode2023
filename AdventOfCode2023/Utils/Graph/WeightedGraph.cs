@@ -78,5 +78,17 @@ namespace AdventOfCode2023.Utils.Graph
 
             return sb.ToString();
         }
+
+        public IEnumerable<GraphNode> Nodes()
+        {
+            foreach (var node in _nodes.Values)
+                yield return node;
+        }
+
+        public IEnumerable<(GraphNode, GraphNode, int)> Connections()
+        {
+            foreach (var kvp in _connections)
+                yield return (Node(kvp.Key.Item1)!, Node(kvp.Key.Item2)!, kvp.Value);
+        }
     }
 }
