@@ -49,6 +49,7 @@ namespace AdventOfCode2023.Utils.Tests
                                                 + "2:   4  0  2  4\r\n"
                                                 + "3:   5  1  0  2\r\n"
                                                 + "4:   3 -1  1  0\r\n"));
+            Assert.That(string.Join(',', fw.Path), Is.EqualTo("1,3,4"));
         }
     }
 }
