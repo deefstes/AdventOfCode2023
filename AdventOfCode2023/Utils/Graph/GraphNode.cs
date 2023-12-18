@@ -3,28 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace AdventOfCode2023.Utils.Graph
 {
-    public class GraphNode(string name, int value = 1, Coordinates? coords = null)
+    public class GraphNode(string name, int value = 1, Coordinates? coords = null) : IEquatable<GraphNode>
     {
         public readonly Coordinates? Coords = coords;
         public int Value = value;
         public string Name = name;
 
-        public override bool Equals(object? obj)
+        public bool Equals(GraphNode? other)
         {
-            if (obj == null)
+            if (other == null)
                 return false;
 
-            if (obj is GraphNode other)
-            {
-                return Equals(Coords, other.Coords)
-                    && Value == other.Value
-                    && Name == other.Name;
-            }
-
-            return false;
+            return Equals(Coords, other.Coords)
+                && Value == other.Value
+                && Name == other.Name;
         }
 
         public override int GetHashCode()
