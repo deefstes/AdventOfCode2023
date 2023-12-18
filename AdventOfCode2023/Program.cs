@@ -12,12 +12,6 @@ if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SOLVE_CURRENT_DAY")
 if (String.IsNullOrEmpty(userInput))
     userInput = DateTime.Now.Day.ToString();
 
-if (userInput == "x")
-{
-    Experiment.Run();
-    return;
-}
-
 if (!int.TryParse(userInput, out var day))
 {
     Console.WriteLine("Incorrect day specified");

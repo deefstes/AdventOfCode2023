@@ -1,22 +1,24 @@
-﻿namespace AdventOfCode2023.Utils.Graph
+﻿using System.Runtime.CompilerServices;
+
+namespace AdventOfCode2023.Utils.Graph
 {
     public class Coordinates(int x, int y)
     {
         public readonly int X = x;
         public readonly int Y = y;
 
-        public Coordinates Move(Direction direction)
+        public Coordinates Move(Direction direction, int distance = 1)
         {
             return direction switch
             {
-                Direction.North => new Coordinates(X, Y - 1),
-                Direction.South => new Coordinates(X, Y + 1),
-                Direction.East => new Coordinates(X + 1, Y),
-                Direction.West => new Coordinates(X - 1, Y),
-                Direction.NorthEast => new Coordinates(X + 1, Y - 1),
-                Direction.NorthWest => new Coordinates(X - 1, Y - 1),
-                Direction.SouthEast => new Coordinates(X + 1, Y + 1),
-                Direction.SouthWest => new Coordinates(X - 1, Y + 1),
+                Direction.North => new Coordinates(X, Y - distance),
+                Direction.South => new Coordinates(X, Y + distance),
+                Direction.East => new Coordinates(X + distance, Y),
+                Direction.West => new Coordinates(X - distance, Y),
+                Direction.NorthEast => new Coordinates(X + distance, Y - distance),
+                Direction.NorthWest => new Coordinates(X - distance, Y - distance),
+                Direction.SouthEast => new Coordinates(X + distance, Y + distance),
+                Direction.SouthWest => new Coordinates(X - distance, Y + distance),
                 _ => throw new Exception("Invalid direction"),
             };
         }
@@ -148,5 +150,47 @@
     {
         North, South, East, West,
         NorthEast, NorthWest, SouthEast, SouthWest
+    }
+
+    public static class Extensions
+    {
+        public static Direction TurnLeft(this Direction dir, int halfSteps = 2)
+        {
+            if (halfSteps == 1)
+            {
+                switch (dir)
+                {
+                    case Direction.North: return Direction.NorthWest;
+                    case Direction.NorthWest: return Direction.West;
+                    case Direction.West: return Direction.SouthWest;
+                    case Direction.SouthWest: return Direction.South;
+                    case Direction.South: return Direction.SouthEast;
+                    case Direction.SouthEast: return Direction.East;
+                    case Direction.East: return Direction.NorthEast;
+                    case Direction.NorthEast: return Direction.North;
+                }
+            }
+
+            return dir.TurnLeft(halfSteps - 1).TurnLeft(1);
+        }
+        public static Direction TurnRight(this Direction dir, int halfSteps = 2)
+        {
+            if (halfSteps == 1)
+            {
+                switch (dir)
+                {
+                    case Direction.North: return Direction.NorthEast;
+                    case Direction.NorthWest: return Direction.North;
+                    case Direction.West: return Direction.NorthWest;
+                    case Direction.SouthWest: return Direction.West;
+                    case Direction.South: return Direction.SouthWest;
+                    case Direction.SouthEast: return Direction.South;
+                    case Direction.East: return Direction.SouthEast;
+                    case Direction.NorthEast: return Direction.East;
+                }
+            }
+
+            return dir.TurnRight(halfSteps - 1).TurnRight(1);
+        }
     }
 }
