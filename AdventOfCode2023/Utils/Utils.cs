@@ -1,8 +1,9 @@
-﻿using System.Diagnostics;
-using System.Text;
-
-namespace AdventOfCode2023.Utils
+﻿namespace AdventOfCode2023.Utils
 {
+    using System.Diagnostics;
+    using System.Text;
+    using System.Collections.Generic;
+
     public static class Utils
     {
         public static (T, TimeSpan) MeasureExecutionTime<T>(Func<T> function)
@@ -58,14 +59,33 @@ namespace AdventOfCode2023.Utils
 
             var grid = new char[width, height];
 
-            for (int y=0; y<height; y++)
+            for (int y = 0; y < height; y++)
             {
-                for (int x=0; x<width; x++)
+                for (int x = 0; x < width; x++)
                 {
                     grid[x, y] = lines[y][x];
                 }
             }
-            
+
+            return grid;
+        }
+
+        public static int[,] AsIntGrid(this string input)
+        {
+            var lines = input.AsList();
+            var height = lines.Count;
+            var width = lines.Max(s => s.Length);
+
+            var grid = new int[width, height];
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    grid[x, y] = lines[y][x] - '0';
+                }
+            }
+
             return grid;
         }
 
@@ -189,6 +209,50 @@ namespace AdventOfCode2023.Utils
             }
 
             return output;
+        }
+    }
+
+    public class DefaultValueDictionary<TKey, TValue>(TValue defaultValue) : Dictionary<TKey, TValue> where TKey : notnull
+    {
+        private TValue DefaultValue { get; } = defaultValue;
+
+        public new TValue this[TKey key]
+        {
+            get => TryGetValue(key, out var t) ? t : DefaultValue;
+            set => base[key] = value;
+        }
+    }
+
+    // This is an attempt to add a Contains() method to the PriorityQueue but it doesn't seem to be
+    // working correctly (as discovered in Day 17's solution). I ended up using SimplePriorityQueue
+    // which I found a nuget package for. I may come back to fix this some time, but until then,
+    // don't use it.
+    public class CustomPriorityQueue<TElement, TPriority> : PriorityQueue<TElement, TPriority>
+    {
+        private List<TElement> elementList = [];
+
+        public CustomPriorityQueue() : base()
+        {
+        }
+
+        public new void Enqueue(TElement item, TPriority priority)
+        {
+            base.Enqueue(item, priority);
+            elementList.Add(item);
+        }
+
+        public new TElement Dequeue()
+        {
+            var element = base.Dequeue();
+            if (!elementList.Remove(element))
+                throw new InvalidDataException();
+
+            return element;
+        }
+
+        public bool Contains(TElement item)
+        {
+            return elementList.Contains(item);
         }
     }
 }

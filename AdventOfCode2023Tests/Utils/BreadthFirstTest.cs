@@ -54,19 +54,17 @@ namespace AdventOfCode2023.Utils.Tests
                 start: "1,4",
                 finish: "8,5");
 
-            Console.WriteLine(grid.Draw(bfs));
-
             // Assert
-            Assert.That(grid.Draw(bfs), Is.EqualTo("..........\r\n"
-                                                 + "....++....\r\n"
-                                                 + "....+++...\r\n"
-                                                 + "....++++..\r\n"
-                                                 + ".S*******.\r\n"
-                                                 + "...+++++F.\r\n"
-                                                 + "....+++...\r\n"
-                                                 + ".###+++...\r\n"
-                                                 + ".###++....\r\n"
-                                                 + "..........\r\n"));
+            Assert.That(grid.Draw(bfs), Is.EqualTo("1111111111\r\n"
+                                                 + "1111551111\r\n"
+                                                 + "1111555111\r\n"
+                                                 + "1111555511\r\n"
+                                                 + "1S*******1\r\n"
+                                                 + "11155555F1\r\n"
+                                                 + "1111555111\r\n"
+                                                 + "1###555111\r\n"
+                                                 + "1###551111\r\n"
+                                                 + "1111111111\r\n"));
         }
         [Test()]
         public void BreadthFirstTest_No_Route()
@@ -128,19 +126,17 @@ namespace AdventOfCode2023.Utils.Tests
                 start: "1,4",
                 finish: "8,5");
 
-            Console.WriteLine(grid.Draw(bfs));
-
             // Assert
-            Assert.That(grid.Draw(bfs), Is.EqualTo("..........\r\n"
-                                                   + "....++....\r\n"
-                                                   + "####+++...\r\n"
-                                                   + "...#++++..\r\n"
-                                                   + "...#++++..\r\n"
-                                                   + "...#++++..\r\n"
-                                                   + "####+++...\r\n"
-                                                   + ".###+++...\r\n"
-                                                   + ".###++....\r\n"
-                                                   + "..........\r\n"));
+            Assert.That(grid.Draw(bfs), Is.EqualTo("1111111111\r\n"
+                                                 + "1111551111\r\n"
+                                                 + "####555111\r\n"
+                                                 + "111#555511\r\n"
+                                                 + "111#555511\r\n"
+                                                 + "111#555511\r\n"
+                                                 + "####555111\r\n"
+                                                 + "1###555111\r\n"
+                                                 + "1###551111\r\n"
+                                                 + "1111111111\r\n"));
         }
     }
 }

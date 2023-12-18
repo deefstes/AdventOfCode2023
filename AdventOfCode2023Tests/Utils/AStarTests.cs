@@ -55,16 +55,16 @@ namespace AdventOfCode2023.Utils.Tests
                 finish: "8,5");
 
             // Assert
-            Assert.That(grid.Draw(astar), Is.EqualTo("...*****..\r\n"
-                                                   + "...*++.**.\r\n"
-                                                   + "...*+++.*.\r\n"
-                                                   + "..**++++*.\r\n"
-                                                   + ".S*+++++*.\r\n"
-                                                   + "...+++++F.\r\n"
-                                                   + "....+++...\r\n"
-                                                   + ".###+++...\r\n"
-                                                   + ".###++....\r\n"
-                                                   + "..........\r\n"));
+            Assert.That(grid.Draw(astar), Is.EqualTo("111*****11\r\n"
+                                                   + "111*551**1\r\n"
+                                                   + "111*5551*1\r\n"
+                                                   + "11**5555*1\r\n"
+                                                   + "1S*55555*1\r\n"
+                                                   + "11155555F1\r\n"
+                                                   + "1111555111\r\n"
+                                                   + "1###555111\r\n"
+                                                   + "1###551111\r\n"
+                                                   + "1111111111\r\n"));
         }
         [Test()]
         public void AStarTest_No_Route()
@@ -127,16 +127,16 @@ namespace AdventOfCode2023.Utils.Tests
                 finish: "8,5");
 
             // Assert
-            Assert.That(grid.Draw(astar), Is.EqualTo("..........\r\n"
-                                                   + "....++....\r\n"
-                                                   + "####+++...\r\n"
-                                                   + "...#++++..\r\n"
-                                                   + "...#++++..\r\n"
-                                                   + "...#++++..\r\n"
-                                                   + "####+++...\r\n"
-                                                   + ".###+++...\r\n"
-                                                   + ".###++....\r\n"
-                                                   + "..........\r\n"));
+            Assert.That(grid.Draw(astar), Is.EqualTo("1111111111\r\n"
+                                                   + "1111551111\r\n"
+                                                   + "####555111\r\n"
+                                                   + "111#555511\r\n"
+                                                   + "111#555511\r\n"
+                                                   + "111#555511\r\n"
+                                                   + "####555111\r\n"
+                                                   + "1###555111\r\n"
+                                                   + "1###551111\r\n"
+                                                   + "1111111111\r\n"));
         }
     }
 }

@@ -106,17 +106,16 @@ namespace AdventOfCode2023.Utils.Graph
         {
             StringBuilder sb = new();
 
-            for (var y = 0; y < 10; y++)
+            for (var y = 0; y < Width; y++)
             {
-                for (var x = 0; x < 10; x++)
+                for (var x = 0; x < Height; x++)
                 {
                     Coordinates coords = new(x, y);
                     if (!_nodes.ContainsKey(coords)) { sb.Append('#'); }
                     else if (pathFinder.Path.Count != 0 && pathFinder.Path.First().Equals(coords.ToString())) { sb.Append('S'); }
                     else if (pathFinder.Path.Count != 0 && pathFinder.Path.Last().Equals(coords.ToString())) { sb.Append('F'); }
                     else if (pathFinder.Path.Count != 0 && pathFinder.Path.Contains(coords.ToString())) { sb.Append('*'); }
-                    else if (_nodes[coords].Value > 1) { sb.Append('+'); }
-                    else { sb.Append('.'); }
+                    else { sb.Append(_nodes[coords].Value); }
                 }
                 sb.AppendLine();
             }
