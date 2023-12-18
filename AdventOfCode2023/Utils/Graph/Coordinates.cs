@@ -1,11 +1,14 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace AdventOfCode2023.Utils.Graph
+﻿namespace AdventOfCode2023.Utils.Graph
 {
     public class Coordinates(int x, int y)
     {
         public readonly int X = x;
         public readonly int Y = y;
+
+        public bool IsZero()
+        {
+            return X == 0 && Y == 0;
+        }
 
         public Coordinates Move(Direction direction, int distance = 1)
         {
