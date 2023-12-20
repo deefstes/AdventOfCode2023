@@ -12,18 +12,20 @@ namespace AdventOfCode2023.Tests.Day20
         public void Part1Test(string input, string expected)
         {
             Solver solver = new();
-            var rsp1 = solver.Part1(File.ReadAllText(input));
+            var rsp = solver.Part1(File.ReadAllText(input));
 
-            Assert.That(rsp1, Is.EqualTo(expected));
+            Assert.That(rsp, Is.EqualTo(expected));
         }
 
         [Test()]
-        public void Part2Test()
+        [TestCase($"Day20\\input.txt", "211712400442661")]
+        [TestCase($"Day20\\input_dylanbr.txt", "211712400442661")]
+        public void Part2Test(string input, string expected)
         {
             Solver solver = new();
-            var rsp = solver.Part2(File.ReadAllText($"Day20\\sample2.txt"));
+            var rsp = solver.Part2(File.ReadAllText(input));
 
-            Assert.That(rsp, Is.EqualTo("1"));
+            Assert.That(rsp, Is.EqualTo(expected));
         }
     }
 }
