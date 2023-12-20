@@ -5,7 +5,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using System.Threading.Tasks;
 
     public class Solver : ISolver
     {
@@ -38,7 +37,7 @@
                 }
             }
 
-            //Console.WriteLine(ModulesToUML(modules));
+            Console.WriteLine(ModulesToUML(modules));
 
             var pulses = CountPulses(modules, 1000);
 
@@ -122,7 +121,7 @@
                 _inputs[source] = false;
             }
 
-            public new string ToString()
+            public string ToString(bool withLabel = true)
             {
                 var stateStr = "?";
                 switch(Type)
@@ -133,9 +132,10 @@
                         stateStr = string.Join(',', stateVals);
                         break;
 
-                }                    
-                    
-                return $"{Type}{Name}:{stateStr}";
+                }
+
+                var label = withLabel ? $"{Type}{Name}:" : "";
+                return $"{label}{stateStr}";
             }
         }
 
@@ -143,6 +143,8 @@
         {
             var lowCount = 0L;
             var highCount = 0L;
+
+            //Console.WriteLine("                                    " + string.Join(' ', modules.Values.Select(mbox => mbox.Name.PadRight(2)).Where(n => n != "broadcaster").ToList()));
 
             while (buttonPresses > 0)
             {
@@ -169,7 +171,7 @@
                     }
 
                     //Console.Write(PulseToString(level, source, destination, 11, 11) + " | ");
-                    //Console.Write(StateToString(1000 - buttonPresses, modules) + " | ");
+                    //Console.Write(StateToString(1000 - buttonPresses, modules, true) + " | ");
                     //Console.WriteLine($"lowCount={lowCount}, highCount={highCount}");
                 }
             }
@@ -177,14 +179,39 @@
             return lowCount * highCount;
         }
 
+        private List<(string, bool)> FindContributors(Dictionary<string, Module> modules, string target, bool triggerLevel)
+        {
+            List<(string, bool)> contributors = [];
+
+            foreach (var parent in modules.Where(m => m.Value.Outputs.Contains(target)))
+            {
+                // if any of the module's parents are FlipFlops, then none of this module's parents should be viewed as contributors
+                if (parent.Value.Type != '&')
+                    return [];
+
+                var parents = FindContributors(modules, parent.Value.Name, !triggerLevel);
+                if (parents.Count != 0)
+                    contributors.AddRange(parents);
+                else
+                    contributors.Add((parent.Value.Name, triggerLevel));
+            }
+
+            return contributors;
+        }
+
         private long CountButtons(Dictionary<string, Module> modules)
         {
             var buttonPresses = 0L;
-            Dictionary<string, long> rxSources = [];
+            Dictionary<(string, bool), long> rxSources = [];
 
-            foreach (var rxSource in modules.Where(m => m.Value.Outputs.Contains("rx")))
-                foreach (var module in modules.Where(m => m.Value.Outputs.Contains(rxSource.Value.Name)))
-                    rxSources[module.Value.Name] = 0;
+            var contributors = FindContributors(modules, "rx", false);
+            foreach (var v in contributors)
+            {
+                rxSources[v] = 0;
+            }
+
+            //Console.WriteLine("      " + string.Join(' ', modules.Values.Select(mbox => mbox.Name.PadRight(2)).Where(n => n != "broadcaster").ToList()));
+            //Console.WriteLine(StateToString(buttonPresses, modules, false));
 
             while (true)
             {
@@ -196,8 +223,8 @@
                 {
                     var (level, source, destination) = pulseQueue.Dequeue();
 
-                    if (rxSources.TryGetValue(source, out long value) && value == 0 && level)
-                        rxSources[source] = buttonPresses;
+                    if (rxSources.TryGetValue((source, level), out long value) && value == 0)
+                        rxSources[(source, level)] = buttonPresses;
 
                     if (modules.TryGetValue(destination, out var module))
                     {
@@ -212,6 +239,8 @@
 
                 //Console.WriteLine(StateToString(buttonPresses, modules.Where(kvp => rxSources.ContainsKey(kvp.Value.Name) || kvp.Value.Name == modules.First(m => m.Value.Outputs.Contains("rx")).Value.Name).ToDictionary()));
 
+                //Console.WriteLine(StateToString(buttonPresses, modules, false));
+
                 if (rxSources.Values.All(x => x != 0))
                     break;
             }
@@ -219,12 +248,12 @@
             return Utils.Lcm<long>(rxSources.Values.Select(v => v).ToArray());
         }
 
-        private string ModulesToString(List<Module> modules)
+        private string ModulesToString(List<Module> modules, bool withLabels = true)
         {
             var sb = new StringBuilder();
             foreach(var module in modules)
             {
-                sb.Append(module.ToString() + " ");
+                sb.Append(module.ToString(withLabels) + " ");
             }
             return sb.ToString().TrimEnd();
         }
@@ -255,11 +284,11 @@
             return sb.ToString();
         }
 
-        private string StateToString(long counter, Dictionary<string, Module> modules)
+        private string StateToString(long counter, Dictionary<string, Module> modules, bool withLabels = true)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append($"{counter.ToString().PadLeft(4)}: ");
-            sb.Append(ModulesToString(modules.Values.Where(m => m.Name != "broadcaster").ToList()));
+            sb.Append(ModulesToString(modules.Values.Where(m => m.Name != "broadcaster").ToList(), withLabels));
 
             return sb.ToString();
         }
