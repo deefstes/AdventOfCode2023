@@ -169,6 +169,34 @@ namespace AdventOfCode2023.Utils.Graph
             return sb.ToString();
         }
 
+        public string DrawDistMap(BreadthFirst bfs)
+        {
+            StringBuilder sb = new();
+            var cellWidth = bfs.DistancesMap.Values.Max().ToString().Length;
+
+            for (var y = 0; y < Width; y++)
+            {
+                for (var x = 0; x < Height; x++)
+                {
+                    if (x != 0)
+                        sb.Append(" ");
+
+                    if (_nodes.TryGetValue(new(x, y), out GraphNode? node))
+                    {
+                        if (bfs.DistancesMap.TryGetValue(node.Name, out var distVal))
+                            sb.Append(distVal.ToString().PadLeft(cellWidth));
+                        else
+                            sb.Append(new string('?', cellWidth));
+                    }
+                    else
+                        sb.Append(new string('X', cellWidth));
+                }
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
+        }
+
         private int DefaultCostFunction(GraphNode from, GraphNode to)
         {
             if (_nodes.TryGetValue(to.Coords!, out GraphNode? node))

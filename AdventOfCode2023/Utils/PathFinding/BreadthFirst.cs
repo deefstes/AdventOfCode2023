@@ -18,6 +18,7 @@ namespace AdventOfCode2023.Utils.Pathfinding
             Dictionary<string, string> cameFrom = [];
 
             frontier.Enqueue(start);
+            var curFrontier = 1;
 
             var distance = 0;
             while (frontier.Count != 0)
@@ -26,6 +27,7 @@ namespace AdventOfCode2023.Utils.Pathfinding
                 if (earlyExit && current.Equals(finish))
                     break;
 
+                DistancesMap.TryGetValue(current, out distance);
                 distance++;
 
                 foreach (var neighbour in graph.Neighbours(graph.Node(current)!))

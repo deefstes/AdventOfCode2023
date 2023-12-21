@@ -1,7 +1,8 @@
 ﻿namespace AdventOfCode2023.Utils.Tests
 {
-    using NUnit.Framework;
     using AdventOfCode2023.Utils;
+    using NUnit.Framework;
+    using System.Globalization;
 
     [TestFixture()]
     public class UtilsTests
@@ -120,6 +121,65 @@
         {
             var grid = input.AsGrid();
             Assert.That(Utils.RowToString(grid, col), Is.EqualTo(expected));
+        }
+
+        [Test()]
+        [TestCase("2,7,34|5,-4,-1", "3,4")]
+        [TestCase("2,-1,1,8|-3,3,9,3|-2,1,4,2", "1,-4,2")]
+        [TestCase("2,-3,1,4,-5,10|1,2,-1,3,2,5|-3,1,2,-1,4,-8|4,5,-3,2,1,3|-2,3,1,-5,6,1", "10.5884,-7.9694,1.7585,-0.5714,6.9116")]
+        [TestCase("25,5,1,7|100,10,1,62|10000,100,1,9602", "1,-4,2")]
+        public void SolveLinearEqSystemTest(string inputMatrix, string expectedArray)
+        {
+            // Arrange
+            var rows = inputMatrix.Split('|');
+            var coefficientsMatrix = new double[rows.Length, rows.Length+1];
+            for (int row = 0; row < rows.Length; row++)
+            {
+                var cols = rows[row].Split(',');
+                for (int col = 0; col < rows.Length + 1; col++)
+                    coefficientsMatrix[row, col] = double.Parse(cols[col]);
+            }
+
+            // Act
+            var indeterminates = Utils.SolveLinearEqSystem(coefficientsMatrix);
+
+            // Assert
+            Assert.That(string.Join(',', indeterminates.Select(x => x.ToString("0.####", new CultureInfo("en-US")))), Is.EqualTo(expectedArray));
+        }
+
+        [Test()]
+        [TestCase("7,5|62,10|9602,100", "1,-4,2")]
+        [TestCase("16,6|50,10|1594,50", "0.6841,-2.4455,6.0455")]
+        public void DiscoverPolynomialTest(string solutionsString, string expectedArray)
+        {
+            // Arrange
+            List<(long y, long x)> solutions = [];
+            foreach (var solution in solutionsString.Split('|'))
+            {
+                long y = long.Parse(solution.Split(',')[0]);
+                long x = long.Parse(solution.Split(',')[1]);
+                solutions.Add((y, x));
+            }
+
+            // Act
+            var indeterminates = Utils.DiscoverPolynomial(solutions);
+
+            // Assert
+            Assert.That(string.Join(',', indeterminates.Select(x => x.ToString("0.####", new CultureInfo("en-US")))), Is.EqualTo(expectedArray));
+        }
+
+        [Test()]
+        [TestCase("4,-3,8", 6, 134)]
+        public void SolvePolynomialTest(string indeterminates, long x, double y)
+        {
+            // Arrange
+            var indt = indeterminates.Split(",").Select(double.Parse).ToArray();
+
+            // Act
+            var resp = Utils.SolvePolynomial(indt, x);
+
+            // Assert
+            Assert.That(resp, Is.EqualTo(y));
         }
     }
 }
