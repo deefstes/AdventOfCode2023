@@ -15,102 +15,6 @@
             return (result, stopwatch.Elapsed);
         }
 
-        public static string Format(this TimeSpan timeSpan)
-        {
-            if ((int)timeSpan.TotalHours > 0)
-                return $"{(int)timeSpan.TotalHours}h " +
-                       $"{timeSpan.Minutes}m " +
-                       $"{timeSpan.Seconds}.{timeSpan.Milliseconds:D3}s";
-
-            if ((int)timeSpan.TotalMinutes > 0)
-                return $"{timeSpan.Minutes}m " +
-                       $"{timeSpan.Seconds}.{timeSpan.Milliseconds:D3}s";
-
-            if ((int)timeSpan.TotalSeconds > 0)
-                return $"{timeSpan.Seconds}.{timeSpan.Milliseconds:D3}s";
-
-            if ((int)timeSpan.TotalMilliseconds > 0)
-                return $"{timeSpan.Milliseconds}.{timeSpan.Microseconds:D3}ms";
-
-            return $"{timeSpan.Microseconds}μs";
-        }
-
-        /// <summary>
-        /// Convert a string containing newlines to IList<string>, dropping all leading and trailing whitespace in the list and also in each individual string in the list
-        /// </summary>
-        /// <param name="input">string containing newlines</param>
-        /// <returns>IList<string></returns>
-        public static IList<string> AsList(this string input)
-        {
-            return input
-                .Trim()
-                .Replace("\r", "")
-                .Split('\n')
-                .ToList()
-                .Select(s => s.Trim())
-                .ToList();
-        }
-
-        public static char[,] AsGrid(this string input)
-        {
-            var lines = input.AsList();
-            var height = lines.Count;
-            var width = lines.Max(s => s.Length);
-
-            var grid = new char[width, height];
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    grid[x, y] = lines[y][x];
-                }
-            }
-
-            return grid;
-        }
-
-        public static int[,] AsIntGrid(this string input)
-        {
-            var lines = input.AsList();
-            var height = lines.Count;
-            var width = lines.Max(s => s.Length);
-
-            var grid = new int[width, height];
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    grid[x, y] = lines[y][x] - '0';
-                }
-            }
-
-            return grid;
-        }
-
-        public static string ColToString(this char[,] grid, int col)
-        {
-            StringBuilder sb = new();
-            for (int y = 0; y < grid.GetLength(1); y++)
-            {
-                sb.Append(grid[col, y]);
-            }
-
-            return sb.ToString();
-        }
-
-        public static string RowToString(this char[,] grid, int row)
-        {
-            StringBuilder sb = new();
-            for (int x = 0; x < grid.GetLength(0); x++)
-            {
-                sb.Append(grid[x, row]);
-            }
-
-            return sb.ToString();
-        }
-
         public static int Levenshtein(string s, string t)
         {
             int n = s.Length;
@@ -213,7 +117,7 @@
 
         /// <summary>
         /// Returns the values for all the coefficients (values for a) in a polynomial of the form
-        /// y = a[n].x^n + a[n-1].x(n-1) + ... + a[2].x^2 + a[1].x + a[0]
+        /// y = a[n].x^n + a[n-1].x^(n-1) + ... + a[2].x^2 + a[1].x + a[0]
         /// given a list of n solutions for y and x where y=f(x)
         /// </summary>
         /// <param name="solutions">List of x and y solutions for y=f(x)</param>

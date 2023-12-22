@@ -111,7 +111,7 @@
         public void ColToStringTest(string input, int col, string expected)
         {
             var grid = input.AsGrid();
-            Assert.That(Utils.ColToString(grid, col), Is.EqualTo(expected));
+            Assert.That(grid.ColToString(col), Is.EqualTo(expected));
         }
 
         [Test()]
@@ -120,7 +120,7 @@
         public void RowToStringTest(string input, int col, string expected)
         {
             var grid = input.AsGrid();
-            Assert.That(Utils.RowToString(grid, col), Is.EqualTo(expected));
+            Assert.That(grid.RowToString(col), Is.EqualTo(expected));
         }
 
         [Test()]
