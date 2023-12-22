@@ -1,9 +1,12 @@
-﻿namespace AdventOfCode2023.Utils.Graph
+﻿using System.Xml.Linq;
+
+namespace AdventOfCode2023.Utils.Graph
 {
-    public class Coordinates(int x, int y)
+    public class Coordinates(int x, int y, int z = 0) : IEquatable<Coordinates>
     {
         public readonly int X = x;
         public readonly int Y = y;
+        public readonly int Z = z;
 
         public bool IsZero()
         {
@@ -22,6 +25,8 @@
                 Direction.NorthWest => new Coordinates(X - distance, Y - distance),
                 Direction.SouthEast => new Coordinates(X + distance, Y + distance),
                 Direction.SouthWest => new Coordinates(X - distance, Y + distance),
+                Direction.Up => new Coordinates(X, Y, Z + 1),
+                Direction.Down => new Coordinates(X, Y, Z - 1),
                 _ => throw new Exception("Invalid direction"),
             };
         }
@@ -145,14 +150,25 @@
 
         public override string ToString()
         {
+            if (Z!=0)
+                return $"{X},{Y},{Z}";
+
             return $"{X},{Y}";
+        }
+
+        public bool Equals(Coordinates? other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return X == other.X && Y == other.Y && Z == other.Z;
         }
     }
 
     public enum Direction
     {
         North, South, East, West,
-        NorthEast, NorthWest, SouthEast, SouthWest
+        NorthEast, NorthWest, SouthEast, SouthWest,
+        Up, Down
     }
 
     public static class Extensions
