@@ -8,7 +8,7 @@ namespace AdventOfCode2023.Tests.Utils
     [TestFixture()]
     public class AStarTests
     {
-        private int DefaultHeuristicFunction(GraphNode node1, GraphNode node2)
+        private long DefaultHeuristicFunction(GraphNode node1, GraphNode node2)
         {
             if (node1 == null || node2 == null)
                 throw new ArgumentException("Null node");
@@ -47,11 +47,9 @@ namespace AdventOfCode2023.Tests.Utils
                 finish: gridNodes[8, 5],
                 heuristicFunction: (a, b) => a.Coords!.ManhattanDistanceTo(b.Coords!));
 
-            Console.WriteLine(grid.Draw(n => n?.Value.ToString() ?? "#", astar));
-
             // Assert
             Assert.That(
-                grid.Draw(n => n?.Value.ToString() ?? "#", astar),
+                grid.Draw(n => n?.Value.ToString() ?? "#", astar).Replace(" ", ""),
                 Is.EqualTo("111*****11\r\n"
                          + "111*551**1\r\n"
                          + "111*5551*1\r\n"
@@ -109,7 +107,7 @@ namespace AdventOfCode2023.Tests.Utils
 
             // Assert
             Assert.That(
-                grid.Draw(n => n?.Value.ToString() ?? "#", astar),
+                grid.Draw(n => n?.Value.ToString() ?? "#", astar).Replace(" ", ""),
                 Is.EqualTo("1111111111\r\n"
                          + "1111551111\r\n"
                          + "####555111\r\n"

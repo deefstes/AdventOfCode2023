@@ -120,7 +120,7 @@
 
             foreach (var node in path)
             {
-                result.Add(node.Move(xDir, delta.X).Move(yDir, delta.Y));
+                result.Add(node.Move(xDir, (int)delta.X).Move(yDir, (int)delta.Y));
             }
 
             return result;

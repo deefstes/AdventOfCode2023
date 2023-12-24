@@ -88,27 +88,27 @@
 
             public int LowestPoint()
             {
-                return Math.Min(Coords1.Z, Coords2.Z);
+                return (int)Math.Min(Coords1.Z, Coords2.Z);
             }
 
             public int HighestPoint()
             {
-                return Math.Max(Coords1.Z, Coords2.Z);
+                return (int)Math.Max(Coords1.Z, Coords2.Z);
             }
 
             public IEnumerable<Coordinates> FootPrint()
             {
                 var z = LowestPoint();
-                for (int x = Math.Min(Coords1.X, Coords2.X); x <= Math.Max(Coords1.X, Coords2.X); x++)
-                    for (int y = Math.Min(Coords1.Y, Coords2.Y); y <= Math.Max(Coords1.Y, Coords2.Y); y++)
+                for (int x = (int)Math.Min(Coords1.X, Coords2.X); x <= Math.Max(Coords1.X, Coords2.X); x++)
+                    for (int y = (int)Math.Min(Coords1.Y, Coords2.Y); y <= Math.Max(Coords1.Y, Coords2.Y); y++)
                         yield return new(x, y, z);
             }
 
             public IEnumerable<Coordinates> HeadPrint()
             {
                 var z = HighestPoint();
-                for (int x = Math.Min(Coords1.X, Coords2.X); x <= Math.Max(Coords1.X, Coords2.X); x++)
-                    for (int y = Math.Min(Coords1.Y, Coords2.Y); y <= Math.Max(Coords1.Y, Coords2.Y); y++)
+                for (int x = (int)Math.Min(Coords1.X, Coords2.X); x <= Math.Max(Coords1.X, Coords2.X); x++)
+                    for (int y = (int)Math.Min(Coords1.Y, Coords2.Y); y <= Math.Max(Coords1.Y, Coords2.Y); y++)
                         yield return new(x, y, z);
             }
 
@@ -223,8 +223,8 @@
             {
                 StringBuilder sb = new StringBuilder();
 
-                var minX = Bricks.Min(b => Math.Min(b.Coords1.X, b.Coords2.X));
-                var maxX = Bricks.Max(b => Math.Min(b.Coords1.X, b.Coords2.X));
+                var minX = (int)Bricks.Min(b => Math.Min(b.Coords1.X, b.Coords2.X));
+                var maxX = (int)Bricks.Max(b => Math.Min(b.Coords1.X, b.Coords2.X));
 
                 for (var z = Bricks.Select(b => b.HighestPoint()).Max(); z > 0; z--)
                 {
@@ -247,8 +247,8 @@
             {
                 StringBuilder sb = new StringBuilder();
 
-                var minY = Bricks.Min(b => Math.Min(b.Coords1.Y, b.Coords2.Y));
-                var maxY = Bricks.Max(b => Math.Min(b.Coords1.Y, b.Coords2.Y));
+                var minY = (int)Bricks.Min(b => Math.Min(b.Coords1.Y, b.Coords2.Y));
+                var maxY = (int)Bricks.Max(b => Math.Min(b.Coords1.Y, b.Coords2.Y));
 
                 for (var z = Bricks.Select(b => b.HighestPoint()).Max(); z > 0; z--)
                 {

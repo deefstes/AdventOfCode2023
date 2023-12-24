@@ -5,9 +5,9 @@ namespace AdventOfCode2023.Utils.Pathfinding
     public class FloydWarshall<TNode> : IPathFinder<TNode> where TNode : IEquatable<TNode>, IComparable<TNode>
     {
         public bool HasSolution { get; }
-        public int TotalCost { get; }
+        public long TotalCost { get; }
         public List<TNode> Path { get; }
-        public Dictionary<(TNode, TNode), int> DistancesMap { get; }
+        public Dictionary<(TNode, TNode), long> DistancesMap { get; }
         private Dictionary<(TNode, TNode), TNode> ComeFromMap { get; }
 
         public FloydWarshall(IWeightedGraph<TNode> graph, TNode start, TNode finish)
@@ -32,13 +32,13 @@ namespace AdventOfCode2023.Utils.Pathfinding
                 foreach (var i in graph.Nodes().Select(n => n))
                     foreach (var j in graph.Nodes().Select(n => n))
                     {
-                        if (!DistancesMap.TryGetValue((i, j), out int ijDist))
+                        if (!DistancesMap.TryGetValue((i, j), out long ijDist))
                             ijDist = 99999;
 
-                        if (!DistancesMap.TryGetValue((i, k), out int ikDist))
+                        if (!DistancesMap.TryGetValue((i, k), out long ikDist))
                             ikDist = 99999;
 
-                        if (!DistancesMap.TryGetValue((k, j), out int kjDist))
+                        if (!DistancesMap.TryGetValue((k, j), out long kjDist))
                             kjDist = 99999;
 
                         if (ijDist > ikDist + kjDist)

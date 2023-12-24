@@ -125,13 +125,13 @@
         public static double[] DiscoverPolynomial(List<(long y, long x)> solutions)
         {
             var order = solutions.Count;
-            var coeffMatrix = new double[order, order+1];
+            var coeffMatrix = new double[order, order + 1];
 
-            for (int row=0; row<order; row++)
+            for (int row = 0; row < order; row++)
             {
                 coeffMatrix[row, order] = solutions[row].y;
 
-                for (int n=0; n<order; n++)
+                for (int n = 0; n < order; n++)
                 {
                     var exp = Math.Pow(solutions[row].x, n);
                     coeffMatrix[row, order - n - 1] = exp;
@@ -140,6 +140,7 @@
 
             return SolveLinearEqSystem(coeffMatrix);
         }
+
         public static double SolvePolynomial(double[] coefficients, long x)
         {
             double y = 0;

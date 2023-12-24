@@ -29,7 +29,7 @@
             var combinations = Utils.Combinations(galaxies);
             foreach ((Coordinates, Coordinates) combo in combinations)
             {
-                var dist = combo.Item1.ManhattanDistanceTo(combo.Item2);
+                var dist = (int)combo.Item1.ManhattanDistanceTo(combo.Item2);
                 var max = new Coordinates(Math.Max(combo.Item1.X, combo.Item2.X), Math.Max(combo.Item1.Y, combo.Item2.Y));
                 var min = new Coordinates(Math.Min(combo.Item1.X, combo.Item2.X), Math.Min(combo.Item1.Y, combo.Item2.Y));
 

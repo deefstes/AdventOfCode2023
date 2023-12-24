@@ -109,7 +109,7 @@
             public int Score { get; } = score;
 
             public int CalcScore(GraphNode destination) => Score + Heuristic(destination);
-            private int Heuristic(GraphNode destination) => Node.Coords!.ManhattanDistanceTo(destination.Coords!);
+            private int Heuristic(GraphNode destination) => (int)Node.Coords!.ManhattanDistanceTo(destination.Coords!);
 
             public override int GetHashCode()
             {

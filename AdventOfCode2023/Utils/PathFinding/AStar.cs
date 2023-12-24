@@ -5,21 +5,21 @@ namespace AdventOfCode2023.Utils.Pathfinding
     public class AStar<TNode> : IPathFinder<TNode> where TNode : IEquatable<TNode>, IComparable<TNode>
     {
         public bool HasSolution { get; }
-        public int TotalCost { get; }
+        public long TotalCost { get; }
         public List<TNode> Path { get; }
 
         private readonly Dictionary<TNode, TNode> _cameFrom = [];
-        private readonly Dictionary<TNode, int> _costSoFar = [];
-        private readonly Func<TNode, TNode, int> _heuristicFunction;
+        private readonly Dictionary<TNode, long> _costSoFar = [];
+        private readonly Func<TNode, TNode, long> _heuristicFunction;
         private readonly IWeightedGraph<TNode> _graph;
 
-        public AStar(IWeightedGraph<TNode> graph, TNode start, TNode finish, Func<TNode, TNode, int>? heuristicFunction = null)
+        public AStar(IWeightedGraph<TNode> graph, TNode start, TNode finish, Func<TNode, TNode, long>? heuristicFunction = null)
         {
             _graph = graph;
             _heuristicFunction = heuristicFunction ?? DefaultHeuristicFunction;
             Path = [];
 
-            var frontier = new PriorityQueue<TNode, int>();
+            var frontier = new PriorityQueue<TNode, long>();
             frontier.Enqueue(start, 0);
 
             _cameFrom[start] = start;
@@ -36,11 +36,11 @@ namespace AdventOfCode2023.Utils.Pathfinding
 
                 foreach (var next in graph.Neighbours(current))
                 {
-                    int newCost = _costSoFar[current] + graph.Cost(current, next);
+                    long newCost = _costSoFar[current] + graph.Cost(current, next);
                     if (!_costSoFar.ContainsKey(next) || newCost < _costSoFar[next])
                     {
                         _costSoFar[next] = newCost;
-                        int priority = newCost + Heuristic(next, finish);
+                        long priority = newCost + Heuristic(next, finish);
                         frontier.Enqueue(next, priority);
                         _cameFrom[next] = current;
                     }
@@ -65,12 +65,12 @@ namespace AdventOfCode2023.Utils.Pathfinding
             }
         }
 
-        private int Heuristic(TNode a, TNode b)
+        private long Heuristic(TNode a, TNode b)
         {
             return _heuristicFunction(a, b);
         }
 
-        private int DefaultHeuristicFunction(TNode a, TNode b)
+        private long DefaultHeuristicFunction(TNode a, TNode b)
         {
             if (a == null || b == null)
                 throw new ArgumentException("Null node");

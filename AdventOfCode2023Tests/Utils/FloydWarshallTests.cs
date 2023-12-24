@@ -27,7 +27,7 @@ namespace AdventOfCode2023.Tests.Utils
 
             var nodes = graph.Nodes().ToList();
             nodes.Sort((x, y) => string.Compare(x, y));
-            int[,] dists = new int[nodes.Count, nodes.Count];
+            long[,] dists = new long[nodes.Count, nodes.Count];
 
             for (int y = 0; y < nodes.Count; y++)
                 for (int x = 0; x < nodes.Count; x++)

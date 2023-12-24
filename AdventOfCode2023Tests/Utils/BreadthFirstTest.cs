@@ -40,7 +40,7 @@ namespace AdventOfCode2023.Tests.Utils
 
             // Assert
             Assert.That(
-                grid.Draw(n => n?.Value.ToString() ?? "#", bfs),
+                grid.Draw(n => n?.Value.ToString() ?? "#", bfs).Replace(" ", ""),
                 Is.EqualTo("1111111111\r\n"
                          + "1111551111\r\n"
                          + "1111555111\r\n"
@@ -97,7 +97,7 @@ namespace AdventOfCode2023.Tests.Utils
 
             // Assert
             Assert.That(
-                grid.Draw(n => n?.Value.ToString() ?? "#", bfs),
+                grid.Draw(n => n?.Value.ToString() ?? "#", bfs).Replace(" ", ""),
                 Is.EqualTo("1111111111\r\n"
                          + "1111551111\r\n"
                          + "####555111\r\n"

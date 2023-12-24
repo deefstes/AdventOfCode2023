@@ -2,11 +2,11 @@
 
 namespace AdventOfCode2023.Utils.Graph
 {
-    public class Coordinates(int x, int y, int z = 0) : IEquatable<Coordinates>
+    public class Coordinates(long x, long y, long z = 0) : IEquatable<Coordinates>
     {
-        public readonly int X = x;
-        public readonly int Y = y;
-        public readonly int Z = z;
+        public readonly long X = x;
+        public readonly long Y = y;
+        public readonly long Z = z;
 
         public bool IsZero()
         {
@@ -31,7 +31,7 @@ namespace AdventOfCode2023.Utils.Graph
             };
         }
 
-        public bool InBounds(int width, int height)
+        public bool InBounds(long width, long height)
         {
             if (X < 0)
                 return false;
@@ -45,7 +45,7 @@ namespace AdventOfCode2023.Utils.Graph
             return true;
         }
 
-        public bool TouchesBorder(int width, int height)
+        public bool TouchesBorder(long width, long height)
         {
             return !(Move(Direction.North).InBounds(width, height) &&
                 Move(Direction.East).InBounds(width, height) &&
@@ -73,17 +73,17 @@ namespace AdventOfCode2023.Utils.Graph
             return null;
         }
 
-        public int ManhattanDistanceTo(Coordinates other)
+        public long ManhattanDistanceTo(Coordinates other)
         {
             return Math.Abs(other.X - X) + Math.Abs(other.Y - Y);
         }
 
-        public int EuclidianDistanceTo(Coordinates other)
+        public long EuclidianDistanceTo(Coordinates other)
         {
             var dx = Math.Abs(other.X - X);
             var dy = Math.Abs(other.Y - Y);
 
-            return (int)Math.Sqrt(dx * dx + dy * dy);
+            return (long)Math.Sqrt(dx * dx + dy * dy);
         }
 
         public List<Coordinates> Neighbours()
@@ -161,6 +161,26 @@ namespace AdventOfCode2023.Utils.Graph
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
             return X == other.X && Y == other.Y && Z == other.Z;
+        }
+
+        public static Coordinates operator +(Coordinates c1, Coordinates c2)
+        {
+            return new Coordinates(c1.X + c2.X, c1.Y + c2.Y, c1.Z + c2.Z);
+        }
+
+        public static Coordinates operator -(Coordinates c1, Coordinates c2)
+        {
+            return new Coordinates(c1.X - c2.X, c1.Y - c2.Y, c1.Z - c2.Z);
+        }
+
+        public static Coordinates operator *(Coordinates c1, Coordinates c2)
+        {
+            return new Coordinates(c1.X * c2.X, c1.Y * c2.Y, c1.Z * c2.Z);
+        }
+
+        public static Coordinates operator /(Coordinates c1, Coordinates c2)
+        {
+            return new Coordinates(c1.X / c2.X, c1.Y / c2.Y, c1.Z / c2.Z);
         }
     }
 
