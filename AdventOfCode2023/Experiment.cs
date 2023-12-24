@@ -12,94 +12,99 @@ namespace AdventOfCode2023
     {
         public object Run()
         {
-            List<Program> programs = [];
-            List<int> speeds = [5, 10, 15];
-            var totalTime = 5.0;
-            var desiredDistance = 0.63;
-            var margin = 0.01;
+            MyClass obj1 = new MyClass { Value = 42 };
+            MyClass obj2 = new MyClass { Value = 42 };
+            MyClass obj3 = new MyClass { Value = 69 };
 
-            foreach (int s0 in speeds)
-                foreach (int s1 in speeds)
-                    foreach (int s2 in speeds)
-                        foreach (int s3 in speeds)
-                            foreach (int s4 in speeds)
-                                foreach (int s5 in speeds)
-                                    foreach (int s6 in speeds)
-                                        foreach (int s7 in speeds)
-                                            foreach (int s8 in speeds)
-                                                foreach (int s9 in speeds)
-                                                {
-                                                    var slotSpeeds = new int[10];
-                                                    slotSpeeds[0] = s0;
-                                                    slotSpeeds[1] = s1;
-                                                    slotSpeeds[2] = s2;
-                                                    slotSpeeds[3] = s3;
-                                                    slotSpeeds[4] = s4;
-                                                    slotSpeeds[5] = s5;
-                                                    slotSpeeds[6] = s6;
-                                                    slotSpeeds[7] = s7;
-                                                    slotSpeeds[8] = s8;
-                                                    slotSpeeds[9] = s9;
+            // Using IEquatable<T> for equality comparison
+            var areEqual = obj1.Equals(obj2);
+            areEqual = obj1 == obj2;
+            var isGreater = obj3 > obj2;
+            var isGreatrOrEqual = obj2 >= obj1;
+            isGreatrOrEqual = obj3 >= obj2;
 
-                                                    var program = new Program();
-                                                    program.AddSlot(TrainingSlot.NewBySpeedDuration(s0, totalTime / 10.0));
-                                                    program.AddSlot(TrainingSlot.NewBySpeedDuration(s1, totalTime / 10.0));
-                                                    program.AddSlot(TrainingSlot.NewBySpeedDuration(s2, totalTime / 10.0));
-                                                    program.AddSlot(TrainingSlot.NewBySpeedDuration(s3, totalTime / 10.0));
-                                                    program.AddSlot(TrainingSlot.NewBySpeedDuration(s4, totalTime / 10.0));
-                                                    program.AddSlot(TrainingSlot.NewBySpeedDuration(s5, totalTime / 10.0));
-                                                    program.AddSlot(TrainingSlot.NewBySpeedDuration(s6, totalTime / 10.0));
-                                                    program.AddSlot(TrainingSlot.NewBySpeedDuration(s7, totalTime / 10.0));
-                                                    program.AddSlot(TrainingSlot.NewBySpeedDuration(s8, totalTime / 10.0));
-                                                    program.AddSlot(TrainingSlot.NewBySpeedDuration(s9, totalTime / 10.0));
+            Console.WriteLine($"Are equal: {areEqual}");
 
-                                                    var ratio = program.TotalDistance / desiredDistance;
-                                                    if (ratio > 1-margin &&
-                                                        ratio < 1+margin &&
-                                                        program.slots.Where(s => s.Speed == 10).Count() == 3)
-
-                                                        programs.Add(program);
-                                                }
-
-            return programs;
+            return null;
         }
 
-        private class Program
+        public class MyClass : IEquatable<MyClass>, IComparable<MyClass>
         {
-            public readonly List<TrainingSlot> slots = [];
-            public double TotalDistance => slots.Sum(s => s.Distance);
-            public double TotalTime => slots.Sum(s => s.Duration);
+            public int Value { get; set; }
 
-            public void AddSlot(TrainingSlot slot)
+            public bool Equals(MyClass other)
             {
-                slots.Add(slot);
-            }
-        }
-
-        private class TrainingSlot
-        {
-            public double Duration;
-            public double Speed;
-            public double Distance;
-
-            public static TrainingSlot NewBySpeedDuration(double speed, double duration)
-            {
-                return new TrainingSlot
-                {
-                    Duration = duration,
-                    Speed = speed,
-                    Distance = speed * duration / 60
-                };
+                // Implement custom equality logic here
+                return other != null && this.Value == other.Value;
             }
 
-            public static TrainingSlot NewBySpeedDistance(double speed, double distance)
+            // Optionally, override the Equals method from System.Object
+            public override bool Equals(object obj)
             {
-                return new TrainingSlot
+                if (obj is MyClass other)
                 {
-                    Duration = distance / speed * 60,
-                    Speed = speed,
-                    Distance = distance
-                };
+                    return Equals(other);
+                }
+                return false;
+            }
+
+            public static bool operator ==(MyClass left, MyClass right)
+            {
+                if (ReferenceEquals(left, null))
+                {
+                    return ReferenceEquals(right, null);
+                }
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(MyClass left, MyClass right)
+            {
+                return !(left == right);
+            }
+
+            public static bool operator >(MyClass left, MyClass right)
+            {
+                if (ReferenceEquals(left, null))
+                {
+                    return false;
+                }
+                return left.CompareTo(right) > 0;
+            }
+
+            public static bool operator >=(MyClass left, MyClass right)
+            {
+                return left.CompareTo(right) >= 0;
+            }
+
+            public static bool operator <=(MyClass left, MyClass right)
+            {
+                return left.CompareTo(right) <= 0;
+            }
+
+            public static bool operator <(MyClass left, MyClass right)
+            {
+                if (ReferenceEquals(left, null))
+                {
+                    return !ReferenceEquals(right, null);
+                }
+                return left.CompareTo(right) < 0;
+            }
+
+            // Optionally, override GetHashCode for better hash code performance
+            public override int GetHashCode()
+            {
+                return Value.GetHashCode();
+            }
+
+            public int CompareTo(MyClass other)
+            {
+                if (other == null)
+                {
+                    return 1; // Indicates that the current instance is greater
+                }
+
+                // Compare based on the 'Value' property
+                return this.Value.CompareTo(other.Value);
             }
         }
     }

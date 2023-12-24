@@ -4,63 +4,63 @@ using System.Text;
 
 namespace AdventOfCode2023.Utils.Graph
 {
-    public class WeightedGraph : IWeightedGraph
+    public class WeightedGraph<TNode> : IWeightedGraph<TNode> where TNode : IComparable<TNode>, IEquatable<TNode>
     {
-        private readonly Dictionary<string, GraphNode> _nodes = [];
-        private readonly Dictionary<(string, string), int> _connections = [];
-        private readonly Func<GraphNode, GraphNode, int> _costFunction;
+        private readonly Dictionary<string, TNode> _nodes = [];
+        private readonly Dictionary<(TNode, TNode), int> _connections = [];
+        private readonly Func<TNode, TNode, int> _costFunction;
 
-        public WeightedGraph(Func<GraphNode, GraphNode, int>? costFunction = null)
+        public WeightedGraph(Func<TNode, TNode, int>? costFunction = null)
         {
             _costFunction = costFunction ?? DefaultCostFunction;
         }
 
-        public int Cost(GraphNode from, GraphNode to)
+        public int Cost(TNode from, TNode to)
         {
             return _costFunction(from, to);
         }
 
-        public bool AddConnection(GraphNode from, GraphNode to, int cost)
+        public bool AddConnection(TNode from, TNode to, int cost)
         {
-            _nodes[from.Name] = from;
-            _nodes[to.Name] = to;
+            _nodes[from.ToString()] = from;
+            _nodes[to.ToString()] = to;
 
-            _connections[(from.Name, to.Name)] = cost;
+            _connections[(from, to)] = cost;
 
             return true;
         }
 
-        public IEnumerable<GraphNode> Neighbours(GraphNode node)
+        public IEnumerable<TNode> Neighbours(TNode node)
         {
-            List<GraphNode> neighbours = [];
+            List<TNode> neighbours = [];
 
-            foreach (string name in _connections
-                .Where(c => c.Key.Item1 == node.Name)
+            foreach (TNode neighbour in _connections
+                .Where(c => c.Key.Item1.Equals(node))
                 .Select(c=>c.Key.Item2))
             {
-                neighbours.Add(Node(name)!);
+                neighbours.Add(neighbour);
             }
 
             return neighbours;
         }
 
-        public GraphNode? Node(string name)
+        public TNode? Node(string name)
         {
-            if (_nodes.TryGetValue(name, out GraphNode? node))
+            if (_nodes.TryGetValue(name, out TNode? node))
                 return node;
 
-            return null;
+            return default;
         }
 
-        private int DefaultCostFunction(GraphNode from, GraphNode to)
+        private int DefaultCostFunction(TNode from, TNode to)
         {
-            if (_connections.TryGetValue((from.Name, to.Name), out var cost))
+            if (_connections.TryGetValue((from, to), out var cost))
                 return cost;
             else
                 return int.MaxValue;
         }
 
-        public string ToUML()
+        public string ToUML(Func<TNode?, string> renderFunc)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -68,7 +68,7 @@ namespace AdventOfCode2023.Utils.Graph
 
             List<string> lines = [];
             foreach (var kvp in _connections)
-                lines.Add($"({kvp.Key.Item1}) --> ({kvp.Key.Item2}) : {kvp.Value}");
+                lines.Add($"({renderFunc(kvp.Key.Item1)}) --> ({renderFunc(kvp.Key.Item2)}) : {kvp.Value}");
             lines.Sort();
 
             foreach (var line in lines)
@@ -79,16 +79,16 @@ namespace AdventOfCode2023.Utils.Graph
             return sb.ToString();
         }
 
-        public IEnumerable<GraphNode> Nodes()
+        public IEnumerable<TNode> Nodes()
         {
             foreach (var node in _nodes.Values)
                 yield return node;
         }
 
-        public IEnumerable<(GraphNode, GraphNode, int)> Connections()
+        public IEnumerable<(TNode, TNode, int)> Connections()
         {
             foreach (var kvp in _connections)
-                yield return (Node(kvp.Key.Item1)!, Node(kvp.Key.Item2)!, kvp.Value);
+                yield return (kvp.Key.Item1, kvp.Key.Item2, kvp.Value);
         }
     }
 }

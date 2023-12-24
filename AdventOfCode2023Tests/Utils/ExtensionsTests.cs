@@ -2,7 +2,7 @@
 using AdventOfCode2023.Utils.Graph;
 using NUnit.Framework;
 
-namespace AdventOfCode2023Tests.Utils
+namespace AdventOfCode2023.Tests.Utils
 {
     public class ExtensionsTests
     {
@@ -33,20 +33,20 @@ namespace AdventOfCode2023Tests.Utils
         [Test()]
         public void TopologicalSortOnGraphTest()
         {
-            var graph = new WeightedGraph();
-            graph.AddConnection(new("7"), new("11"), 1);
-            graph.AddConnection(new("7"), new("8"), 1);
-            graph.AddConnection(new("5"), new("11"), 1);
-            graph.AddConnection(new("3"), new("8"), 1);
-            graph.AddConnection(new("3"), new("10"), 1);
-            graph.AddConnection(new("11"), new("2"), 1);
-            graph.AddConnection(new("11"), new("9"), 1);
-            graph.AddConnection(new("11"), new("10"), 1);
-            graph.AddConnection(new("8"), new("9"), 1);
+            var graph = new WeightedGraph<string>();
+            graph.AddConnection("7", "11", 1);
+            graph.AddConnection("7", "8", 1);
+            graph.AddConnection("5", "11", 1);
+            graph.AddConnection("3", "8", 1);
+            graph.AddConnection("3", "10", 1);
+            graph.AddConnection("11", "2", 1);
+            graph.AddConnection("11", "9", 1);
+            graph.AddConnection("11", "10", 1);
+            graph.AddConnection("8", "9", 1);
 
             var ret = graph.TopologicalSort();
 
-            Assert.That(ret.Select(n => n.Name), Is.EqualTo(new[] { "7", "5", "11", "2", "3", "10", "8", "9" }));
+            Assert.That(ret, Is.EqualTo(new[] { "7", "5", "11", "2", "3", "10", "8", "9" }));
         }
     }
 }

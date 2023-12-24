@@ -6,6 +6,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Xml.Linq;
 
     // This solution upsets me profusely. I implemented an A* class in advance so that I could be ready
     // for a puzzle like this one. Only it turned out to be useless because of this puzzle's additional
@@ -19,7 +20,7 @@
     {
         public string Part1(string input)
         {
-            var grid = new WeightedGrid(input.AsIntGrid());
+            var grid = new WeightedGrid<GraphNode>(GraphNode.GridFromIntGrid(input.AsIntGrid()));
 
             var totalLoss = AStar(
                 field: grid,
@@ -33,7 +34,7 @@
 
         public string Part2(string input)
         {
-            var grid = new WeightedGrid(input.AsIntGrid());
+            var grid = new WeightedGrid<GraphNode>(GraphNode.GridFromIntGrid(input.AsIntGrid()));
 
             var totalLoss = AStar(
                 field: grid,
@@ -45,7 +46,7 @@
             return totalLoss.ToString();
         }
 
-        private static int AStar(WeightedGrid field, GraphNode start, GraphNode finish, int minLeg, int maxLeg)
+        private static int AStar(WeightedGrid<GraphNode> field, GraphNode start, GraphNode finish, int minLeg, int maxLeg)
         {
             Dictionary<State, int> scoreCache = [];
             SimplePriorityQueue<State, int> frontier = new();

@@ -237,21 +237,21 @@
         /// <remarks>https://en.wikipedia.org/wiki/Topological_sorting</remarks>
         /// <param name="graph">Directed acyclic graph</param>
         /// <returns>Sorted nodes in topological order.</returns>
-        public static List<GraphNode> TopologicalSort(this IWeightedGraph graph)
+        public static List<TNode> TopologicalSort<TNode>(this WeightedGraph<TNode> graph) where TNode : IComparable<TNode>, IEquatable<TNode>
         {
-            HashSet<GraphNode> nodes = [];
+            HashSet<TNode> nodes = [];
             foreach (var node in graph.Nodes())
                 nodes.Add(node);
 
-            HashSet<(GraphNode, GraphNode)> edges = [];
+            HashSet<(TNode, TNode)> edges = [];
             foreach (var connection in graph.Connections())
                 edges.Add((connection.Item1, connection.Item2));
 
             // Empty list that will contain the sorted elements
-            var L = new List<GraphNode>();
+            var L = new List<TNode>();
 
             // Set of all nodes with no incoming edges
-            var S = new HashSet<GraphNode>(nodes.Where(n => edges.All(e => e.Item2.Equals(n) == false)));
+            var S = new HashSet<TNode>(nodes.Where(n => edges.All(e => e.Item2.Equals(n) == false)));
 
             // while S is non-empty do
             while (S.Count != 0)

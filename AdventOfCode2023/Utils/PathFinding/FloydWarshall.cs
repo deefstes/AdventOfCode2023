@@ -2,15 +2,15 @@
 
 namespace AdventOfCode2023.Utils.Pathfinding
 {
-    public class FloydWarshall : IPathFinder
+    public class FloydWarshall<TNode> : IPathFinder<TNode> where TNode : IEquatable<TNode>, IComparable<TNode>
     {
         public bool HasSolution { get; }
         public int TotalCost { get; }
-        public List<string> Path { get; }
-        public Dictionary<(string, string), int> DistancesMap { get; }
-        private Dictionary<(string, string), string> ComeFromMap { get; }
+        public List<TNode> Path { get; }
+        public Dictionary<(TNode, TNode), int> DistancesMap { get; }
+        private Dictionary<(TNode, TNode), TNode> ComeFromMap { get; }
 
-        public FloydWarshall(IWeightedGraph graph, string start, string finish)
+        public FloydWarshall(IWeightedGraph<TNode> graph, TNode start, TNode finish)
         {
             Path = [];
             HasSolution = true;
@@ -19,18 +19,18 @@ namespace AdventOfCode2023.Utils.Pathfinding
 
             foreach (var node in graph.Nodes())
             {
-                DistancesMap[(node.Name, node.Name)] = 0;
+                DistancesMap[(node, node)] = 0;
             }
 
             foreach (var connection in graph.Connections())
             {
-                DistancesMap[(connection.Item1.Name, connection.Item2.Name)] = connection.Item3;
-                ComeFromMap[(connection.Item1.Name, connection.Item2.Name)] = connection.Item1.Name;
+                DistancesMap[(connection.Item1, connection.Item2)] = connection.Item3;
+                ComeFromMap[(connection.Item1, connection.Item2)] = connection.Item1;
             }
 
-            foreach (var k in graph.Nodes().Select(n => n.Name))
-                foreach (var i in graph.Nodes().Select(n => n.Name))
-                    foreach (var j in graph.Nodes().Select(n => n.Name))
+            foreach (var k in graph.Nodes().Select(n => n))
+                foreach (var i in graph.Nodes().Select(n => n))
+                    foreach (var j in graph.Nodes().Select(n => n))
                     {
                         if (!DistancesMap.TryGetValue((i, j), out int ijDist))
                             ijDist = 99999;

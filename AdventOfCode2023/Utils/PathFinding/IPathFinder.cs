@@ -2,10 +2,10 @@
 
 namespace AdventOfCode2023.Utils.Pathfinding
 {
-    public interface IPathFinder
+    public interface IPathFinder<TNode> where TNode : IEquatable<TNode>, IComparable<TNode>
     {
         public bool HasSolution { get; }
         public int TotalCost { get; }
-        public List<string> Path { get; }
+        public List<TNode> Path { get; }
     }
 }

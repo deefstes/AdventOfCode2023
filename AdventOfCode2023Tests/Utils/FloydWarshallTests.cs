@@ -3,7 +3,7 @@ using AdventOfCode2023.Utils.Pathfinding;
 using NUnit.Framework;
 using System.Text;
 
-namespace AdventOfCode2023.Utils.Tests
+namespace AdventOfCode2023.Tests.Utils
 {
     [TestFixture()]
     public class FloydWarshallTests
@@ -12,33 +12,33 @@ namespace AdventOfCode2023.Utils.Tests
         public void FloydWarshallTest()
         {
             // Arrange
-            var graph = new WeightedGraph();
-            graph.AddConnection(new("1"), new("3"), -2);
-            graph.AddConnection(new("3"), new("4"), 2);
-            graph.AddConnection(new("4"), new("2"), -1);
-            graph.AddConnection(new("2"), new("1"), 4);
-            graph.AddConnection(new("2"), new("3"), 3);
+            var graph = new WeightedGraph<string>();
+            graph.AddConnection("1", "3", -2);
+            graph.AddConnection("3", "4", 2);
+            graph.AddConnection("4", "2", -1);
+            graph.AddConnection("2", "1", 4);
+            graph.AddConnection("2", "3", 3);
 
             // Act
-            var fw = new FloydWarshall(
+            var fw = new FloydWarshall<string>(
                 graph: graph,
                 start: "1",
                 finish: "4");
 
             var nodes = graph.Nodes().ToList();
-            nodes.Sort((x, y) => string.Compare(x.Name, y.Name));
+            nodes.Sort((x, y) => string.Compare(x, y));
             int[,] dists = new int[nodes.Count, nodes.Count];
 
             for (int y = 0; y < nodes.Count; y++)
                 for (int x = 0; x < nodes.Count; x++)
-                    dists[x, y] = fw.DistancesMap[(nodes[x].Name, nodes[y].Name)];
+                    dists[x, y] = fw.DistancesMap[(nodes[x], nodes[y])];
 
             StringBuilder sb = new();
-            var longestNodeName = graph.Nodes().Select(n => n.Name.Length).Max();
+            var longestNodeName = graph.Nodes().Select(n => n.Length).Max();
             var longestDistance = fw.DistancesMap.Select(d=>d.Value.ToString().Length).Max();
             for (int y = 0; y < nodes.Count; y++)
             {
-                sb.Append(nodes[y].Name.PadLeft(longestNodeName) + ": ");
+                sb.Append(nodes[y].PadLeft(longestNodeName) + ": ");
                 for (int x = 0; x < nodes.Count; x++)
                     sb.Append(dists[y,x].ToString().PadLeft(longestDistance+1));
                 sb.AppendLine();

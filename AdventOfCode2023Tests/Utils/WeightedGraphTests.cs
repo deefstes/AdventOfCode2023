@@ -1,7 +1,7 @@
 ﻿using AdventOfCode2023.Utils.Graph;
 using NUnit.Framework;
 
-namespace AdventOfCode2023.Utils.Tests
+namespace AdventOfCode2023.Tests.Utils
 {
     [TestFixture()]
     public class WeightedGraphTests
@@ -9,16 +9,16 @@ namespace AdventOfCode2023.Utils.Tests
         [Test()]
         public void WeightedGraphTest()
         {
-            var graph = new WeightedGraph();
-            graph.AddConnection(new("1"), new("2"), 1);
-            graph.AddConnection(new("1"), new("3"), 4);
-            graph.AddConnection(new("3"), new("2"), 2);
-            graph.AddConnection(new("4"), new("3"), 3);
-            graph.AddConnection(new("0"), new("4"), 8);
-            graph.AddConnection(new("0"), new("3"), 7);
-            graph.AddConnection(new("0"), new("1"), 3);
+            var graph = new WeightedGraph<string>();
+            graph.AddConnection("1", "2", 1);
+            graph.AddConnection("1", "3", 4);
+            graph.AddConnection("3", "2", 2);
+            graph.AddConnection("4", "3", 3);
+            graph.AddConnection("0", "4", 8);
+            graph.AddConnection("0", "3", 7);
+            graph.AddConnection("0", "1", 3);
 
-            var output = graph.ToUML();
+            var output = graph.ToUML(n => n ?? "?");
 
             Assert.That(output, Is.EqualTo("@startuml\r\n"
                                          + "(0) --> (1) : 3\r\n"

@@ -1,7 +1,7 @@
 ﻿using AdventOfCode2023.Utils.Graph;
 using NUnit.Framework;
 
-namespace AdventOfCode2023.Utils.Tests
+namespace AdventOfCode2023.Tests.Utils
 {
     [TestFixture()]
     public class CoordinatesTests

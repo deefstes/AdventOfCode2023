@@ -2,23 +2,22 @@
 
 namespace AdventOfCode2023.Utils.Pathfinding
 {
-    public class BreadthFirst : IPathFinder
+    public class BreadthFirst<TNode> : IPathFinder<TNode> where TNode : IEquatable<TNode>, IComparable<TNode>
     {
         public bool HasSolution { get; }
         public int TotalCost { get; }
-        public List<string> Path { get; }
-        public Dictionary<string, int> DistancesMap { get; }
+        public List<TNode> Path { get; }
+        public Dictionary<TNode, int> DistancesMap { get; }
 
-        public BreadthFirst(IWeightedGraph graph, string start, string finish, bool earlyExit = false)
+        public BreadthFirst(IWeightedGraph<TNode> graph, TNode start, TNode finish, bool earlyExit = false)
         {
             Path = [];
             DistancesMap = [];
 
-            Queue<string> frontier = [];
-            Dictionary<string, string> cameFrom = [];
+            Queue<TNode> frontier = [];
+            Dictionary<TNode, TNode> cameFrom = [];
 
             frontier.Enqueue(start);
-            var curFrontier = 1;
 
             var distance = 0;
             while (frontier.Count != 0)
@@ -30,13 +29,13 @@ namespace AdventOfCode2023.Utils.Pathfinding
                 DistancesMap.TryGetValue(current, out distance);
                 distance++;
 
-                foreach (var neighbour in graph.Neighbours(graph.Node(current)!))
+                foreach (var neighbour in graph.Neighbours(current))
                 {
-                    if (!cameFrom.ContainsKey(neighbour.Name))
+                    if (!cameFrom.ContainsKey(neighbour))
                     {
-                        frontier.Enqueue(neighbour.Name);
-                        cameFrom[neighbour.Name] = current;
-                        DistancesMap[neighbour.Name] = distance;
+                        frontier.Enqueue(neighbour);
+                        cameFrom[neighbour] = current;
+                        DistancesMap[neighbour] = distance;
                     }
                 }
             }

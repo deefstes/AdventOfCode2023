@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode2023.Utils.Tests
+﻿namespace AdventOfCode2023.Tests.Utils
 {
     using AdventOfCode2023.Utils;
     using NUnit.Framework;

@@ -3,76 +3,56 @@ using System.Text;
 
 namespace AdventOfCode2023.Utils.Graph
 {
-    public class WeightedGrid : IWeightedGraph
+    public class WeightedGrid<TNode> : IWeightedGraph<TNode> where TNode : IEquatable<TNode>, IComparable<TNode>
     {
         public readonly int Width;
         public readonly int Height;
-        private readonly Dictionary<Coordinates, GraphNode> _nodes = [];
-        private readonly Func<GraphNode, GraphNode, int> _costFunction;
+        private readonly Dictionary<Coordinates, TNode> _nodes = [];
+        private readonly Func<TNode, TNode, int> _costFunction;
 
-        public WeightedGrid(int width, int height, Func<GraphNode, GraphNode, int>? costFunction = null)
-        {
-            this.Width = width;
-            this.Height = height;
-            _costFunction = costFunction ?? DefaultCostFunction;
-
-            for (int y = 0; y < this.Height; y++)
-                for (int x = 0; x < this.Width; x++)
-                    _nodes[new(x, y)] = new($"{x},{y}", 1, new(x, y));
-        }
-
-        public WeightedGrid(int[,] arr, Func<GraphNode, GraphNode, int>? costFunction = null)
+        public WeightedGrid(TNode[,] arr, Func<TNode, TNode, int>? costFunction = null)
         {
             Width = arr.GetLength(0);
             Height = arr.GetLength(1);
             _costFunction = costFunction ?? DefaultCostFunction;
 
-            for (int y = 0; y < Height; y++)
-                for (int x = 0; x < Width; x++)
-                    _nodes[new(x, y)] = new($"{x},{y}", arr[x, y], new(x, y));
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                    _nodes[new Coordinates(x, y)] = arr[x, y];
         }
 
-        public WeightedGrid(string[,] arr, Func<GraphNode, GraphNode, int>? costFunction = null)
-        {
-            Width = arr.GetLength(0);
-            Height = arr.GetLength(1);
-            _costFunction = costFunction ?? DefaultCostFunction;
-
-            for (int y = 0; y < Height; y++)
-                for (int x = 0; x < Width; x++)
-                    _nodes[new(x, y)] = new(arr[x, y], 1, new(x, y));
-        }
-
-        public int Cost(GraphNode from, GraphNode to)
+        public int Cost(TNode from, TNode to)
         {
             return _costFunction(from, to);
         }
 
-        public IEnumerable<GraphNode> Neighbours(GraphNode node)
+        public IEnumerable<TNode> Neighbours(TNode node)
         {
-            List<GraphNode> neighbours = [];
+            var coords = _nodes.FirstOrDefault(x => node.Equals(x.Value)).Key;
 
-            if (_nodes.TryGetValue(node.Coords!.Move(Direction.North), out GraphNode? neighbourNorth))
-                neighbours.Add(neighbourNorth);
+            foreach (var dir in new List<Direction> { Direction.North, Direction.East, Direction.South, Direction.West })
+            {
+                var newCoords = coords.Move(dir);
+                if (!newCoords.InBounds(Width, Height))
+                    continue;
 
-            if (_nodes.TryGetValue(node.Coords!.Move(Direction.East), out GraphNode? neighbourEast))
-                neighbours.Add(neighbourEast);
-
-            if (_nodes.TryGetValue(node.Coords!.Move(Direction.South), out GraphNode? neighbourSouth))
-                neighbours.Add(neighbourSouth);
-
-            if (_nodes.TryGetValue(node.Coords!.Move(Direction.West), out GraphNode? neighbourWest))
-                neighbours.Add(neighbourWest);
-
-            return neighbours;
+                if (_nodes.TryGetValue(newCoords, out var neighbour))
+                    if (neighbour != null)
+                        yield return neighbour;
+            }
         }
 
-        public GraphNode? Node(string name)
+        public TNode? Node(string coordsString)
         {
-            if (_nodes.TryGetValue(new(int.Parse(name.Split(',')[0]), int.Parse(name.Split(',')[1])), out GraphNode? node))
+            if (!int.TryParse(coordsString.Split(',')[0], out var x))
+                return default;
+            if (!int.TryParse(coordsString.Split(',')[1], out var y))
+                return default;
+
+            if (_nodes.TryGetValue(new(x, y), out var node))
                 return node;
 
-            return null;
+            return default;
         }
 
         public bool DeleteNode(Coordinates coords)
@@ -85,24 +65,17 @@ namespace AdventOfCode2023.Utils.Graph
             return true;
         }
 
-        public bool SetNode(GraphNode node)
-        {
-            _nodes[node.Coords!] = node;
-
-            return true;
-        }
-
-        public bool SetNodeValue(Coordinates coords, int value)
+        public bool SetNode(Coordinates coords, TNode node)
         {
             if (_nodes.ContainsKey(coords))
-                _nodes[coords].Value = value;
+                _nodes[coords] = node;
             else
                 return false;
 
             return true;
         }
 
-        public string Draw(IPathFinder pathFinder)
+        public string Draw(Func<TNode?, string> renderFunc, IPathFinder<TNode>? pathFinder = null)
         {
             StringBuilder sb = new();
 
@@ -111,65 +84,21 @@ namespace AdventOfCode2023.Utils.Graph
                 for (var x = 0; x < Height; x++)
                 {
                     Coordinates coords = new(x, y);
-                    if (!_nodes.ContainsKey(coords)) { sb.Append('#'); }
-                    else if (pathFinder.Path.Count != 0 && pathFinder.Path.First().Equals(coords.ToString())) { sb.Append('S'); }
-                    else if (pathFinder.Path.Count != 0 && pathFinder.Path.Last().Equals(coords.ToString())) { sb.Append('F'); }
-                    else if (pathFinder.Path.Count != 0 && pathFinder.Path.Contains(coords.ToString())) { sb.Append('*'); }
-                    else { sb.Append(_nodes[coords].Value); }
+                    _nodes.TryGetValue(coords, out var node);
+                    if (!_nodes.ContainsKey(coords)) { sb.Append(renderFunc(default)); }
+                    else if (pathFinder != null && pathFinder.Path.Count != 0 && node != null && pathFinder.Path.First().Equals(node)) { sb.Append('S'); }
+                    else if (pathFinder != null && pathFinder.Path.Count != 0 && node != null && pathFinder.Path.Last().Equals(node)) { sb.Append('F'); }
+                    else if (pathFinder != null && pathFinder.Path.Count != 0 && node != null && pathFinder.Path.Contains(_nodes[coords])) { sb.Append('*'); }
+                    else { sb.Append(renderFunc(_nodes[coords])); }
+                    sb.Append(" ");
                 }
                 sb.AppendLine();
             }
 
-            return sb.ToString();
+            return sb.ToString().Replace(" \r\n", "\r\n");
         }
 
-        public string DrawByValues()
-        {
-            StringBuilder sb = new();
-            var cellWidth = _nodes.Values.Select(node => node.Value).Max().ToString().Length;
-
-            for (var y = 0; y < 10; y++)
-            {
-                for (var x = 0; x < 10; x++)
-                {
-                    if (x!=0)
-                        sb.Append(" ");
-
-                    if (_nodes.TryGetValue(new(x, y), out GraphNode? node))
-                        sb.Append(node.Value.ToString().PadLeft(cellWidth));
-                    else
-                        sb.Append(new string('X', cellWidth));
-                }
-                sb.AppendLine();
-            }
-
-            return sb.ToString();
-        }
-
-        public string DrawByNames()
-        {
-            StringBuilder sb = new();
-            var cellWidth = _nodes.Values.Select(node => node.Name.Length).Max();
-
-            for (var y = 0; y < 10; y++)
-            {
-                for (var x = 0; x < 10; x++)
-                {
-                    if (x != 0)
-                        sb.Append(" ");
-
-                    if (_nodes.TryGetValue(new(x, y), out GraphNode? node))
-                        sb.Append(node.Name.PadLeft(cellWidth));
-                    else
-                        sb.Append(new string('X', cellWidth));
-                }
-                sb.AppendLine();
-            }
-
-            return sb.ToString();
-        }
-
-        public string DrawDistMap(BreadthFirst bfs)
+        public string DrawDistMap(BreadthFirst<TNode> bfs)
         {
             StringBuilder sb = new();
             var cellWidth = bfs.DistancesMap.Values.Max().ToString().Length;
@@ -181,9 +110,9 @@ namespace AdventOfCode2023.Utils.Graph
                     if (x != 0)
                         sb.Append(" ");
 
-                    if (_nodes.TryGetValue(new(x, y), out GraphNode? node))
+                    if (_nodes.TryGetValue(new(x, y), out TNode? node))
                     {
-                        if (bfs.DistancesMap.TryGetValue(node.Name, out var distVal))
+                        if (bfs.DistancesMap.TryGetValue(node, out var distVal))
                             sb.Append(distVal.ToString().PadLeft(cellWidth));
                         else
                             sb.Append(new string('?', cellWidth));
@@ -197,21 +126,24 @@ namespace AdventOfCode2023.Utils.Graph
             return sb.ToString();
         }
 
-        private int DefaultCostFunction(GraphNode from, GraphNode to)
+        private int DefaultCostFunction(TNode from, TNode to)
         {
-            if (_nodes.TryGetValue(to.Coords!, out GraphNode? node))
-                return node?.Value ?? int.MaxValue;
+            var fromCoords = _nodes.FirstOrDefault(x => from.Equals(x.Value)).Key;
+            var toCoords = _nodes.FirstOrDefault(x => to.Equals(x.Value)).Key;
+
+            if (fromCoords.NeighboursCardinal().Contains(toCoords))
+                return 1;
 
             return int.MaxValue;
         }
 
-        public IEnumerable<GraphNode> Nodes()
+        public IEnumerable<TNode> Nodes()
         {
             foreach (var node in _nodes.Values)
                 yield return node;
         }
 
-        public IEnumerable<(GraphNode, GraphNode, int)> Connections()
+        public IEnumerable<(TNode, TNode, int)> Connections()
         {
             foreach (var node in _nodes.Values)
                 foreach (var neighbour in Neighbours(node))
