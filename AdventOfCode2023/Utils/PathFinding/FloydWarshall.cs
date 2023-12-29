@@ -1,4 +1,5 @@
 ﻿using AdventOfCode2023.Utils.Graph;
+using System.Text;
 
 namespace AdventOfCode2023.Utils.Pathfinding
 {
@@ -58,6 +59,31 @@ namespace AdventOfCode2023.Utils.Pathfinding
             }
             Path.Add(start);
             Path.Reverse();
+        }
+
+        public string PrintDistancesMap(Func<TNode, string> renderNodeFunc)
+        {
+            var padLen = Math.Max(
+                DistancesMap.Keys.Max(k => renderNodeFunc(k.Item1))!.Length,
+                DistancesMap.Values.Max().ToString().Length
+                );
+            StringBuilder sb = new();
+
+            sb.Append(new string(' ', padLen) + " ");
+            sb.AppendLine(string.Join(' ', DistancesMap.Keys.Select(k => renderNodeFunc(k.Item1).PadLeft(padLen))));
+            foreach (var nodeRow in DistancesMap.Keys.Select(k => k.Item1))
+            {
+                sb.Append(renderNodeFunc(nodeRow).PadLeft(padLen) + " ");
+                StringBuilder vals = new();
+                foreach (var nodeCol in DistancesMap.Keys.Select(k => k.Item1))
+                {
+                    var v = DistancesMap[(nodeRow, nodeCol)];
+                    vals.Append(v.ToString().PadLeft(padLen) + " ");
+                }
+                sb.AppendLine(vals.ToString().TrimEnd());
+            }
+
+            return sb.ToString();
         }
     }
 }

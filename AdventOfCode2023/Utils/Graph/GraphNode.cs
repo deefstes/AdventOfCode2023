@@ -48,5 +48,10 @@ namespace AdventOfCode2023.Utils.Graph
 
             return result;
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
