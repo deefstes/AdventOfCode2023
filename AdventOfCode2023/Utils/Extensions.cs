@@ -349,5 +349,25 @@
                 return L;
             }
         }
+
+        public static long FindLongestPath(this Dictionary<int, Dictionary<int, long>> edges, int start, int end)
+        {
+            return Calc(start, 1L << start);
+
+            long Calc(int cur, long used)
+            {
+                if (cur == end)
+                    return 0;
+
+                var res = long.MinValue;
+                foreach (var (next, dist) in edges[cur])
+                {
+                    if ((used & (1L << next)) == 0)
+                        res = Math.Max(res, Calc(next, used | (1L << next)) + dist);
+                }
+
+                return res;
+            }
+        }
     }
 }

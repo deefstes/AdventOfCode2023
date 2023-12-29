@@ -1,8 +1,8 @@
 ﻿namespace AdventOfCode2023.Utils
 {
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Text;
-    using System.Collections.Generic;
 
     public static class Utils
     {
